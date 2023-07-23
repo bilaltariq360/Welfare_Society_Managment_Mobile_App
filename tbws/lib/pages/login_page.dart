@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tbws/providers/google_signin_provider.dart';
 import '/components/my_button.dart';
 import '/components/my_textfield.dart';
 import '/components/square_tile.dart';
@@ -147,12 +150,20 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 50),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SquareTile(imagePath: 'lib/images/google.png'),
-                    SizedBox(width: 25),
-                    SquareTile(imagePath: 'lib/images/apple.png')
+                    GestureDetector(
+                        onTap: () {
+                          final provider = Provider.of<GoogleSignInProvider>(
+                              context,
+                              listen: false);
+                          provider.googleLogin();
+                        },
+                        child: const SquareTile(
+                            imagePath: 'lib/images/google.png')),
+                    const SizedBox(width: 25),
+                    const SquareTile(imagePath: 'lib/images/apple.png')
                   ],
                 ),
                 const SizedBox(height: 50),

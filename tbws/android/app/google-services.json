@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "262279891254",
+    "project_id": "tbws-app",
+    "storage_bucket": "tbws-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:262279891254:android:c945034ad71770063f0b97",
+        "android_client_info": {
+          "package_name": "com.example.tbws"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "262279891254-cfr2l4i9fsfm74elvfkua7127rjo9bi2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tbws",
+            "certificate_hash": "eb00eec3a2ae69170349ee80dad25b4c6f03ade1"
+          }
+        },
+        {
+          "client_id": "262279891254-trqosu3eguelp482dkusb2jk8k4ch0db.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcCV96YX-mBArDKQIO0tDklfQiWRfEsxY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "262279891254-sl8mq93pb34hhrv5opltffkd6ueekdku.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
