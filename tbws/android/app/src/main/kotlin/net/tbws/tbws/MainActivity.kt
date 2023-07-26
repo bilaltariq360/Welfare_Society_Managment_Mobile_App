@@ -1,4 +1,4 @@
-package com.example.tbws
+package net.tbws.tbws
 
 import io.flutter.embedding.android.FlutterActivity
 

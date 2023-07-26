@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import './pages/home_page.dart';
+import './pages/notifications_page.dart';
 import 'pages/login_page.dart';
 import 'package:provider/provider.dart';
 import './providers/google_signin_provider.dart';
@@ -17,6 +19,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: LoginPage(),
+        routes: {
+          Home.routeName: (context) => Home(),
+        },
       ),
     );
   }

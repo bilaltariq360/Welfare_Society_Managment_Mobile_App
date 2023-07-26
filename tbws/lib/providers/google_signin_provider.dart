@@ -5,6 +5,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 class GoogleSignInProvider extends ChangeNotifier {
   final googleSignin = GoogleSignIn();
 
+  bool logedIn = false;
+
   GoogleSignInAccount? _user;
 
   GoogleSignInAccount get user => _user!;
@@ -22,6 +24,8 @@ class GoogleSignInProvider extends ChangeNotifier {
         accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
 
     await FirebaseAuth.instance.signInWithCredential(credential);
+
+    logedIn = true;
 
     notifyListeners();
   }

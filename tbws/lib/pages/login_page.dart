@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tbws/providers/google_signin_provider.dart';
 import '/components/my_button.dart';
 import '/components/my_textfield.dart';
 import '/components/square_tile.dart';
+import 'home_page.dart';
 
 enum AuthScreen { SignIn, SignUp }
 
@@ -41,6 +41,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: SafeArea(
@@ -155,10 +156,12 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     GestureDetector(
                         onTap: () {
-                          final provider = Provider.of<GoogleSignInProvider>(
-                              context,
-                              listen: false);
                           provider.googleLogin();
+
+                          if (provider.user != null) {
+                            Navigator.pushReplacementNamed(
+                                context, Home.routeName);
+                          }
                         },
                         child: const SquareTile(
                             imagePath: 'lib/images/google.png')),

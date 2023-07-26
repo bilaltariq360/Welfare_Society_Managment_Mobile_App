@@ -1,41 +1,70 @@
 {
   "project_info": {
-    "project_number": "262279891254",
-    "project_id": "tbws-app",
-    "storage_bucket": "tbws-app.appspot.com"
+    "project_number": "794768956797",
+    "project_id": "tbws-app-fba9e",
+    "storage_bucket": "tbws-app-fba9e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:262279891254:android:c945034ad71770063f0b97",
+        "mobilesdk_app_id": "1:794768956797:android:e851cf7764b0113e6c4014",
         "android_client_info": {
           "package_name": "com.example.tbws"
         }
       },
       "oauth_client": [
         {
-          "client_id": "262279891254-cfr2l4i9fsfm74elvfkua7127rjo9bi2.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.tbws",
-            "certificate_hash": "eb00eec3a2ae69170349ee80dad25b4c6f03ade1"
-          }
-        },
-        {
-          "client_id": "262279891254-trqosu3eguelp482dkusb2jk8k4ch0db.apps.googleusercontent.com",
+          "client_id": "794768956797-8jac8q72ffmr6uqm5i4a1vpe27p8ca87.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAcCV96YX-mBArDKQIO0tDklfQiWRfEsxY"
+          "current_key": "AIzaSyDrJVMFOy9J93I2FuraIsUrA9wLIZDce6s"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "262279891254-sl8mq93pb34hhrv5opltffkd6ueekdku.apps.googleusercontent.com",
+              "client_id": "794768956797-8jac8q72ffmr6uqm5i4a1vpe27p8ca87.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:794768956797:android:b276de967b0a55186c4014",
+        "android_client_info": {
+          "package_name": "net.tbws.tbws"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "794768956797-78a80bb7q29o0eblvib5cagrn2tr1a4s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.tbws.tbws",
+            "certificate_hash": "eb00eec3a2ae69170349ee80dad25b4c6f03ade1"
+          }
+        },
+        {
+          "client_id": "794768956797-8jac8q72ffmr6uqm5i4a1vpe27p8ca87.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrJVMFOy9J93I2FuraIsUrA9wLIZDce6s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "794768956797-8jac8q72ffmr6uqm5i4a1vpe27p8ca87.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
