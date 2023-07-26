@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tbws/components/my_autocomplete.dart';
 import 'package:tbws/providers/google_signin_provider.dart';
+import 'package:flutter/services.dart';
 import '/components/my_button.dart';
 import '/components/my_textfield.dart';
 import 'home_page.dart';
@@ -17,13 +19,23 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   AuthScreen auth = AuthScreen.SignIn;
 
-  final usernameController = TextEditingController();
+  final cnicController = TextEditingController();
+
+  final mobileController = TextEditingController();
+
+  final houseAreaController = TextEditingController();
+
+  final streetController = const TextEditingValue();
 
   final passwordController = TextEditingController();
 
   final fullnameController = TextEditingController();
 
   final confirmPasswordController = TextEditingController();
+
+  final List<bool> houseArea = [false, false, false, false];
+
+  String dropdownValue = 'Select';
 
   void signUserIn() {}
   void signUserUp() {}
@@ -66,9 +78,15 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 25),
                 MyTextField(
-                  controller: usernameController,
+                  controller: cnicController,
                   hintText: 'CNIC',
                   obscureText: false,
+                  textInputType: TextInputType.number,
+                  filteringTextInputFormatter:
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  maxLength: 13,
+                  minLength: 13,
+                  exactLength: 13,
                 ),
                 const SizedBox(height: 10),
                 (auth == AuthScreen.SignUp)
@@ -78,6 +96,13 @@ class _LoginPageState extends State<LoginPage> {
                             controller: fullnameController,
                             hintText: 'Full Name',
                             obscureText: false,
+                            textInputType: TextInputType.name,
+                            filteringTextInputFormatter:
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'[a-zA-Z]')),
+                            maxLength: 25,
+                            minLength: 3,
+                            exactLength: 200,
                           ),
                           const SizedBox(height: 10),
                         ],
@@ -87,9 +112,16 @@ class _LoginPageState extends State<LoginPage> {
                     ? Column(
                         children: [
                           MyTextField(
-                            controller: fullnameController,
+                            controller: mobileController,
                             hintText: 'Mobile',
                             obscureText: false,
+                            textInputType: TextInputType.number,
+                            filteringTextInputFormatter:
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'[0-9]')),
+                            maxLength: 11,
+                            minLength: 11,
+                            exactLength: 11,
                           ),
                           const SizedBox(height: 10),
                         ],
@@ -98,22 +130,139 @@ class _LoginPageState extends State<LoginPage> {
                 (auth == AuthScreen.SignUp)
                     ? Column(
                         children: [
-                          MyTextField(
-                            controller: fullnameController,
+                          MyAutocomplete(
                             hintText: 'Street',
-                            obscureText: false,
+                            textInputType: TextInputType.phone,
+                            filteringTextInputFormatter:
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'[a-zA-Z]')),
                           ),
                           const SizedBox(height: 10),
                         ],
                       )
                     : const SizedBox(),
                 (auth == AuthScreen.SignUp)
+                    ? DropdownButton<String>(
+                        // Step 3.
+                        value: dropdownValue,
+                        // Step 4.
+                        items: <String>['Dog', 'Cat', 'Tiger', 'Lion']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: TextStyle(fontSize: 30),
+                            ),
+                          );
+                        }).toList(),
+                        // Step 5.
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownValue = newValue!;
+                          });
+                        },
+                      )
+                    : const SizedBox(),
+                (auth == AuthScreen.SignUp)
                     ? Column(
                         children: [
-                          MyTextField(
-                            controller: fullnameController,
-                            hintText: 'House Area',
-                            obscureText: false,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              children: [
+                                Radio(
+                                  value: houseArea[0],
+                                  groupValue: true,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      houseArea[0] = true;
+                                      houseArea[1] = false;
+                                      houseArea[2] = false;
+                                      houseArea[3] = false;
+                                    });
+                                  },
+                                ),
+                                Text('7 OR less than 7 Marla',
+                                    style: TextStyle(
+                                        fontWeight: (houseArea[0])
+                                            ? FontWeight.bold
+                                            : FontWeight.normal)),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              children: [
+                                Radio(
+                                  value: houseArea[1],
+                                  groupValue: true,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      houseArea[0] = false;
+                                      houseArea[1] = true;
+                                      houseArea[2] = false;
+                                      houseArea[3] = false;
+                                    });
+                                  },
+                                ),
+                                Text('Above than 7 AND less than 10 Marla',
+                                    style: TextStyle(
+                                        fontWeight: (houseArea[1])
+                                            ? FontWeight.bold
+                                            : FontWeight.normal)),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              children: [
+                                Radio(
+                                  value: houseArea[2],
+                                  groupValue: true,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      houseArea[0] = false;
+                                      houseArea[1] = false;
+                                      houseArea[2] = true;
+                                      houseArea[3] = false;
+                                    });
+                                  },
+                                ),
+                                Text(
+                                    '10 OR above than 10 AND less than 1 Kanal',
+                                    style: TextStyle(
+                                        fontWeight: (houseArea[2])
+                                            ? FontWeight.bold
+                                            : FontWeight.normal)),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              children: [
+                                Radio(
+                                  value: houseArea[3],
+                                  groupValue: true,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      houseArea[0] = false;
+                                      houseArea[1] = false;
+                                      houseArea[2] = false;
+                                      houseArea[3] = true;
+                                    });
+                                  },
+                                ),
+                                Text('1 Kanal OR above than 1 Kanal',
+                                    style: TextStyle(
+                                        fontWeight: (houseArea[3])
+                                            ? FontWeight.bold
+                                            : FontWeight.normal)),
+                              ],
+                            ),
                           ),
                           const SizedBox(height: 10),
                         ],
@@ -123,6 +272,12 @@ class _LoginPageState extends State<LoginPage> {
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
+                  textInputType: TextInputType.text,
+                  filteringTextInputFormatter:
+                      FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]')),
+                  maxLength: 20,
+                  minLength: 6,
+                  exactLength: 200,
                 ),
                 (auth == AuthScreen.SignUp)
                     ? Column(
@@ -132,6 +287,13 @@ class _LoginPageState extends State<LoginPage> {
                             controller: confirmPasswordController,
                             hintText: 'Confirm Password',
                             obscureText: true,
+                            textInputType: TextInputType.phone,
+                            filteringTextInputFormatter:
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'[0-5]')),
+                            maxLength: 20,
+                            minLength: 6,
+                            exactLength: 200,
                           ),
                         ],
                       )
@@ -158,15 +320,9 @@ class _LoginPageState extends State<LoginPage> {
                   btnText: (auth == AuthScreen.SignIn) ? 'Sign in' : 'Sign up',
                   onTap: (auth == AuthScreen.SignIn)
                       ? () {
-                          showSearch(
-                              context: context,
-                              delegate: CustomSearchDelegate());
                           signUserIn();
                         }
                       : () {
-                          showSearch(
-                              context: context,
-                              delegate: CustomSearchDelegate());
                           signUserIn();
                         },
                 ),
@@ -203,125 +359,6 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class CustomSearchDelegate extends SearchDelegate {
-  List<String> streets = [
-    'New Canal Park',
-    'Jamun',
-    'Chanmbaili',
-    'Channar',
-    'Ghulab',
-    'Champa Gali',
-    'Beri Galli',
-    'Ammbi',
-    'Ambar',
-    'Baylla',
-    'Ghuncha',
-    'Sitara',
-    'Paras Gali',
-    'Sarmad Gali',
-    'Marjan',
-    'Shajar Raha',
-    'Kanwal Rah',
-    'Motia Gali',
-    'Nargis',
-    'Gainda',
-    'Safaida',
-    'Sagwan',
-    'Zafran',
-    'Sukh Chain',
-    'Samman',
-    'Shaheen',
-    'Saba',
-    'Koel',
-    'Sarooj',
-    'Zoofa',
-    'Zaitoon',
-    'Enjeer',
-    'Samar Rah',
-    'Sumbal Rah Main',
-    'Marwa',
-    'Yasmeen',
-    'Kewrah',
-    'Falsa',
-    'Sanobar',
-    'Kanir',
-    'Saroo',
-    'Shabnam',
-    'Mahak',
-    'Gulshan Rah',
-    'Kiran',
-    'Khushbo',
-    'Gulnar',
-    'Hina Gali',
-    'Hassan Block',
-    'Gulshan Rah Ext'
-  ];
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        onPressed: () {
-          query = '';
-        },
-        icon: const Icon(Icons.clear),
-      ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        close(context, null);
-      },
-      icon: const Icon(Icons.arrow_back),
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    List<String> matchStreet = [];
-
-    for (var street in streets) {
-      if (street.toLowerCase().contains(query.toLowerCase())) {
-        matchStreet.add(street);
-      }
-    }
-
-    return ListView.builder(
-      itemCount: matchStreet.length,
-      itemBuilder: (context, index) {
-        var result = matchStreet[index];
-        return ListTile(
-          title: Text(result),
-        );
-      },
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    List<String> matchStreet = [];
-
-    for (var street in streets) {
-      if (street.toLowerCase().contains(query.toLowerCase())) {
-        matchStreet.add(street);
-      }
-    }
-
-    return ListView.builder(
-      itemCount: matchStreet.length,
-      itemBuilder: (context, index) {
-        var result = matchStreet[index];
-        return ListTile(
-          title: Text(result),
-        );
-      },
     );
   }
 }
