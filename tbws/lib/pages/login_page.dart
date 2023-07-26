@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tbws/components/dropdown.dart';
 import 'package:tbws/components/my_autocomplete.dart';
 import 'package:tbws/providers/google_signin_provider.dart';
 import 'package:flutter/services.dart';
@@ -33,12 +34,24 @@ class _LoginPageState extends State<LoginPage> {
 
   final confirmPasswordController = TextEditingController();
 
-  final List<bool> houseArea = [false, false, false, false];
+  //final List<bool> houseArea = [false, false, false, false];
 
-  String dropdownValue = 'Select';
+  List<String> houseNo = List.generate(70, (index) => (index + 1).toString());
 
-  void signUserIn() {}
-  void signUserUp() {}
+  List<String> houseArea = [
+    '7 OR less than 7 Marla',
+    'Above than 7 AND less than 10 Marla',
+    '10 OR above than 10 AND less than 1 Kanal',
+    '1 Kanal OR above than 1 Kanal'
+  ];
+
+  void signUserIn() {
+    Navigator.pushReplacementNamed(context, Home.routeName);
+  }
+
+  void signUserUp() {
+    Navigator.pushReplacementNamed(context, Home.routeName);
+  }
 
   void tootgleAuthScreen() {
     setState(() {
@@ -47,6 +60,11 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         auth = AuthScreen.SignIn;
       }
+      cnicController.text = '';
+      fullnameController.text = '';
+      mobileController.text = '';
+      passwordController.text = '';
+      confirmPasswordController.text = '';
     });
   }
 
@@ -87,6 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                   maxLength: 13,
                   minLength: 13,
                   exactLength: 13,
+                  check: (cnicController.text.isEmpty) ? false : true,
                 ),
                 const SizedBox(height: 10),
                 (auth == AuthScreen.SignUp)
@@ -103,6 +122,9 @@ class _LoginPageState extends State<LoginPage> {
                             maxLength: 25,
                             minLength: 3,
                             exactLength: 200,
+                            check: (fullnameController.text.isEmpty)
+                                ? false
+                                : true,
                           ),
                           const SizedBox(height: 10),
                         ],
@@ -122,6 +144,8 @@ class _LoginPageState extends State<LoginPage> {
                             maxLength: 11,
                             minLength: 11,
                             exactLength: 11,
+                            check:
+                                (mobileController.text.isEmpty) ? false : true,
                           ),
                           const SizedBox(height: 10),
                         ],
@@ -132,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           MyAutocomplete(
                             hintText: 'Street',
-                            textInputType: TextInputType.phone,
+                            textInputType: TextInputType.text,
                             filteringTextInputFormatter:
                                 FilteringTextInputFormatter.allow(
                                     RegExp(r'[a-zA-Z]')),
@@ -142,29 +166,28 @@ class _LoginPageState extends State<LoginPage> {
                       )
                     : const SizedBox(),
                 (auth == AuthScreen.SignUp)
-                    ? DropdownButton<String>(
-                        // Step 3.
-                        value: dropdownValue,
-                        // Step 4.
-                        items: <String>['Dog', 'Cat', 'Tiger', 'Lion']
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: TextStyle(fontSize: 30),
-                            ),
-                          );
-                        }).toList(),
-                        // Step 5.
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownValue = newValue!;
-                          });
-                        },
+                    ? Column(
+                        children: [
+                          MyDropdown(
+                            hintText: 'Select House No',
+                            list: houseNo,
+                          ),
+                          const SizedBox(height: 10),
+                        ],
                       )
                     : const SizedBox(),
                 (auth == AuthScreen.SignUp)
+                    ? Column(
+                        children: [
+                          MyDropdown(
+                            hintText: 'Select House Area',
+                            list: houseArea,
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      )
+                    : const SizedBox(),
+                /*(auth == AuthScreen.SignUp)
                     ? Column(
                         children: [
                           Padding(
@@ -267,7 +290,7 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 10),
                         ],
                       )
-                    : const SizedBox(),
+                    : const SizedBox(),*/
                 MyTextField(
                   controller: passwordController,
                   hintText: 'Password',
@@ -278,6 +301,7 @@ class _LoginPageState extends State<LoginPage> {
                   maxLength: 20,
                   minLength: 6,
                   exactLength: 200,
+                  check: (passwordController.text.isEmpty) ? false : true,
                 ),
                 (auth == AuthScreen.SignUp)
                     ? Column(
@@ -287,13 +311,16 @@ class _LoginPageState extends State<LoginPage> {
                             controller: confirmPasswordController,
                             hintText: 'Confirm Password',
                             obscureText: true,
-                            textInputType: TextInputType.phone,
+                            textInputType: TextInputType.text,
                             filteringTextInputFormatter:
                                 FilteringTextInputFormatter.allow(
-                                    RegExp(r'[0-5]')),
+                                    RegExp(r'[a-zA-Z0-9]')),
                             maxLength: 20,
                             minLength: 6,
                             exactLength: 200,
+                            check: (confirmPasswordController.text.isEmpty)
+                                ? false
+                                : true,
                           ),
                         ],
                       )

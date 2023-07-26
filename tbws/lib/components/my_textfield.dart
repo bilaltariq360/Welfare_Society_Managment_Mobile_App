@@ -10,7 +10,7 @@ class MyTextField extends StatefulWidget {
   final int minLength;
   final TextInputType textInputType;
   final FilteringTextInputFormatter filteringTextInputFormatter;
-  bool check = false;
+  bool check;
 
   MyTextField({
     super.key,
@@ -22,6 +22,7 @@ class MyTextField extends StatefulWidget {
     required this.minLength,
     required this.textInputType,
     required this.filteringTextInputFormatter,
+    required this.check,
   });
 
   @override
