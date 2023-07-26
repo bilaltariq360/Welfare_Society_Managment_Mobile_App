@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:tbws/providers/google_signin_provider.dart';
 import '/components/my_button.dart';
 import '/components/my_textfield.dart';
-import '/components/square_tile.dart';
 import 'home_page.dart';
 
 enum AuthScreen { SignIn, SignUp }
@@ -66,6 +65,12 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 25),
+                MyTextField(
+                  controller: usernameController,
+                  hintText: 'CNIC',
+                  obscureText: false,
+                ),
+                const SizedBox(height: 10),
                 (auth == AuthScreen.SignUp)
                     ? Column(
                         children: [
@@ -78,12 +83,42 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       )
                     : const SizedBox(),
-                MyTextField(
-                  controller: usernameController,
-                  hintText: 'Email',
-                  obscureText: false,
-                ),
-                const SizedBox(height: 10),
+                (auth == AuthScreen.SignUp)
+                    ? Column(
+                        children: [
+                          MyTextField(
+                            controller: fullnameController,
+                            hintText: 'Mobile',
+                            obscureText: false,
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      )
+                    : const SizedBox(),
+                (auth == AuthScreen.SignUp)
+                    ? Column(
+                        children: [
+                          MyTextField(
+                            controller: fullnameController,
+                            hintText: 'Street',
+                            obscureText: false,
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      )
+                    : const SizedBox(),
+                (auth == AuthScreen.SignUp)
+                    ? Column(
+                        children: [
+                          MyTextField(
+                            controller: fullnameController,
+                            hintText: 'House Area',
+                            obscureText: false,
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      )
+                    : const SizedBox(),
                 MyTextField(
                   controller: passwordController,
                   hintText: 'Password',
@@ -121,53 +156,19 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 25),
                 MyButton(
                   btnText: (auth == AuthScreen.SignIn) ? 'Sign in' : 'Sign up',
-                  onTap: (auth == AuthScreen.SignIn) ? signUserIn : signUserIn,
-                ),
-                const SizedBox(height: 50),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(
-                          'Or continue with',
-                          style: TextStyle(color: Colors.grey[700]),
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 50),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                        onTap: () {
-                          provider.googleLogin();
-
-                          if (provider.user != null) {
-                            Navigator.pushReplacementNamed(
-                                context, Home.routeName);
-                          }
+                  onTap: (auth == AuthScreen.SignIn)
+                      ? () {
+                          showSearch(
+                              context: context,
+                              delegate: CustomSearchDelegate());
+                          signUserIn();
+                        }
+                      : () {
+                          showSearch(
+                              context: context,
+                              delegate: CustomSearchDelegate());
+                          signUserIn();
                         },
-                        child: const SquareTile(
-                            imagePath: 'lib/images/google.png')),
-                    const SizedBox(width: 25),
-                    const SquareTile(imagePath: 'lib/images/apple.png')
-                  ],
                 ),
                 const SizedBox(height: 50),
                 Row(
@@ -202,6 +203,125 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class CustomSearchDelegate extends SearchDelegate {
+  List<String> streets = [
+    'New Canal Park',
+    'Jamun',
+    'Chanmbaili',
+    'Channar',
+    'Ghulab',
+    'Champa Gali',
+    'Beri Galli',
+    'Ammbi',
+    'Ambar',
+    'Baylla',
+    'Ghuncha',
+    'Sitara',
+    'Paras Gali',
+    'Sarmad Gali',
+    'Marjan',
+    'Shajar Raha',
+    'Kanwal Rah',
+    'Motia Gali',
+    'Nargis',
+    'Gainda',
+    'Safaida',
+    'Sagwan',
+    'Zafran',
+    'Sukh Chain',
+    'Samman',
+    'Shaheen',
+    'Saba',
+    'Koel',
+    'Sarooj',
+    'Zoofa',
+    'Zaitoon',
+    'Enjeer',
+    'Samar Rah',
+    'Sumbal Rah Main',
+    'Marwa',
+    'Yasmeen',
+    'Kewrah',
+    'Falsa',
+    'Sanobar',
+    'Kanir',
+    'Saroo',
+    'Shabnam',
+    'Mahak',
+    'Gulshan Rah',
+    'Kiran',
+    'Khushbo',
+    'Gulnar',
+    'Hina Gali',
+    'Hassan Block',
+    'Gulshan Rah Ext'
+  ];
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        onPressed: () {
+          query = '';
+        },
+        icon: const Icon(Icons.clear),
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        close(context, null);
+      },
+      icon: const Icon(Icons.arrow_back),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    List<String> matchStreet = [];
+
+    for (var street in streets) {
+      if (street.toLowerCase().contains(query.toLowerCase())) {
+        matchStreet.add(street);
+      }
+    }
+
+    return ListView.builder(
+      itemCount: matchStreet.length,
+      itemBuilder: (context, index) {
+        var result = matchStreet[index];
+        return ListTile(
+          title: Text(result),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<String> matchStreet = [];
+
+    for (var street in streets) {
+      if (street.toLowerCase().contains(query.toLowerCase())) {
+        matchStreet.add(street);
+      }
+    }
+
+    return ListView.builder(
+      itemCount: matchStreet.length,
+      itemBuilder: (context, index) {
+        var result = matchStreet[index];
+        return ListTile(
+          title: Text(result),
+        );
+      },
     );
   }
 }
