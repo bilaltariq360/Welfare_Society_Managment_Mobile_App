@@ -8,7 +8,7 @@ import '/components/my_button.dart';
 import '/components/my_textfield.dart';
 import 'home_page.dart';
 
-enum AuthScreen { SignIn, SignUp }
+enum AuthScreen { signIn, signUp }
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -18,7 +18,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  AuthScreen auth = AuthScreen.SignIn;
+  AuthScreen auth = AuthScreen.signIn;
 
   final cnicController = TextEditingController();
 
@@ -55,16 +55,16 @@ class _LoginPageState extends State<LoginPage> {
 
   void tootgleAuthScreen() {
     setState(() {
-      if (auth == AuthScreen.SignIn) {
-        auth = AuthScreen.SignUp;
+      if (auth == AuthScreen.signIn) {
+        auth = AuthScreen.signUp;
       } else {
-        auth = AuthScreen.SignIn;
+        auth = AuthScreen.signIn;
       }
-      cnicController.text = '';
-      fullnameController.text = '';
-      mobileController.text = '';
-      passwordController.text = '';
-      confirmPasswordController.text = '';
+      cnicController.clear();
+      fullnameController.clear();
+      mobileController.clear();
+      passwordController.clear();
+      confirmPasswordController.clear();
     });
   }
 
@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 50),
                 Text(
-                  (auth == AuthScreen.SignIn)
+                  (auth == AuthScreen.signIn)
                       ? 'Welcome back you\'ve been missed!'
                       : 'Get yourself register now!',
                   style: TextStyle(
@@ -108,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                   check: (cnicController.text.isEmpty) ? false : true,
                 ),
                 const SizedBox(height: 10),
-                (auth == AuthScreen.SignUp)
+                (auth == AuthScreen.signUp)
                     ? Column(
                         children: [
                           MyTextField(
@@ -130,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       )
                     : const SizedBox(),
-                (auth == AuthScreen.SignUp)
+                (auth == AuthScreen.signUp)
                     ? Column(
                         children: [
                           MyTextField(
@@ -151,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       )
                     : const SizedBox(),
-                (auth == AuthScreen.SignUp)
+                (auth == AuthScreen.signUp)
                     ? Column(
                         children: [
                           MyAutocomplete(
@@ -165,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       )
                     : const SizedBox(),
-                (auth == AuthScreen.SignUp)
+                (auth == AuthScreen.signUp)
                     ? Column(
                         children: [
                           MyDropdown(
@@ -176,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       )
                     : const SizedBox(),
-                (auth == AuthScreen.SignUp)
+                (auth == AuthScreen.signUp)
                     ? Column(
                         children: [
                           MyDropdown(
@@ -303,7 +303,7 @@ class _LoginPageState extends State<LoginPage> {
                   exactLength: 200,
                   check: (passwordController.text.isEmpty) ? false : true,
                 ),
-                (auth == AuthScreen.SignUp)
+                (auth == AuthScreen.signUp)
                     ? Column(
                         children: [
                           const SizedBox(height: 10),
@@ -344,8 +344,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                 const SizedBox(height: 25),
                 MyButton(
-                  btnText: (auth == AuthScreen.SignIn) ? 'Sign in' : 'Sign up',
-                  onTap: (auth == AuthScreen.SignIn)
+                  btnText: (auth == AuthScreen.signIn) ? 'Sign in' : 'Sign up',
+                  onTap: (auth == AuthScreen.signIn)
                       ? () {
                           signUserIn();
                         }
@@ -358,7 +358,7 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      (auth == AuthScreen.SignUp)
+                      (auth == AuthScreen.signUp)
                           ? 'Already have account?'
                           : 'Not a member?',
                       style: TextStyle(color: Colors.grey[700]),
@@ -367,7 +367,7 @@ class _LoginPageState extends State<LoginPage> {
                     GestureDetector(
                       onTap: tootgleAuthScreen,
                       child: Text(
-                        (auth == AuthScreen.SignIn)
+                        (auth == AuthScreen.signIn)
                             ? 'Register now'
                             : 'Sign in',
                         style: const TextStyle(
