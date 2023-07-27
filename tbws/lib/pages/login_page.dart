@@ -142,7 +142,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void signUserIn() {
-    Navigator.pushReplacementNamed(context, Home.routeName);
+    //Navigator.pushReplacementNamed(context, Home.routeName);
+    setState(() {
+      errMsg = 'No record found!';
+    });
   }
 
   void signUserUp() {
@@ -177,6 +180,9 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
+            physics: (auth == AuthScreen.signIn)
+                ? const NeverScrollableScrollPhysics()
+                : const BouncingScrollPhysics(),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -375,13 +381,13 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                 const SizedBox(height: 25),
-                (auth == AuthScreen.signUp && errMsg != '')
+                (errMsg != '')
                     ? Column(
                         children: [
                           Container(
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(
-                                vertical: 20, horizontal: 25),
+                                vertical: 15, horizontal: 25),
                             margin: const EdgeInsets.symmetric(horizontal: 25),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
