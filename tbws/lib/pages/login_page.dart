@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tbws/components/dropdown.dart';
 import 'package:tbws/components/my_autocomplete.dart';
-import 'package:tbws/providers/google_signin_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import '/components/my_button.dart';
 import '/components/my_textfield.dart';
@@ -11,6 +10,14 @@ import 'home_page.dart';
 enum AuthScreen { signIn, signUp }
 
 class LoginPage extends StatefulWidget {
+  static String? passwordForConfirmPassword;
+
+  static bool houseNoSelected = false;
+
+  static bool houseAreaSelected = false;
+
+  static bool housePropertySelected = false;
+
   LoginPage({super.key});
 
   @override
@@ -18,6 +25,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String errMsg = '';
+
   AuthScreen auth = AuthScreen.signIn;
 
   final cnicController = TextEditingController();
@@ -26,31 +35,120 @@ class _LoginPageState extends State<LoginPage> {
 
   final houseAreaController = TextEditingController();
 
-  final streetController = const TextEditingValue();
-
   final passwordController = TextEditingController();
 
   final fullnameController = TextEditingController();
 
   final confirmPasswordController = TextEditingController();
 
-  //final List<bool> houseArea = [false, false, false, false];
-
   List<String> houseNo = List.generate(70, (index) => (index + 1).toString());
 
   List<String> houseArea = [
-    '7 OR less than 7 Marla',
-    'Above than 7 AND less than 10 Marla',
-    '10 OR above than 10 AND less than 1 Kanal',
-    '1 Kanal OR above than 1 Kanal'
+    '1   <=   Marla   <=   7',
+    '7   <   Marla   <   10',
+    '10   <=   Marla   <   1(Kanal)',
+    '1   <=   Kanal'
   ];
+
+  List<String> houseProperty = ['Owner', 'Rental'];
+
+  bool passwordValidator() {
+    RegExp lowerCaseRegex = RegExp(r'[a-z]');
+    RegExp numberRegex = RegExp(r'[0-9]');
+
+    return passwordController.text.length >= 6 &&
+        lowerCaseRegex.hasMatch(passwordController.text) &&
+        numberRegex.hasMatch(passwordController.text);
+  }
+
+  bool confirmPasswordMatch() {
+    return passwordController.text == confirmPasswordController.text;
+  }
+
+  bool signupAuthentication() {
+    bool streetMatch = false;
+    bool returningValue = true;
+
+    for (var street in MyAutocomplete.streets) {
+      if (street.toLowerCase() ==
+          MyAutocomplete.streetController.toLowerCase()) {
+        streetMatch = true;
+      }
+    }
+
+    if (cnicController.text.length != 13) {
+      setState(() {
+        errMsg = 'Enter valid CNIC!';
+      });
+      returningValue = !returningValue;
+    } else if (fullnameController.text.length < 3) {
+      setState(() {
+        errMsg = 'Enter valid name!';
+      });
+      returningValue = !returningValue;
+    } else if (mobileController.text.length != 11) {
+      setState(() {
+        errMsg = 'Enter valid mobile number!';
+      });
+      returningValue = !returningValue;
+    } else if (!streetMatch) {
+      setState(() {
+        errMsg = 'Select valid street!';
+      });
+      returningValue = !returningValue;
+    } else if (!LoginPage.houseNoSelected) {
+      setState(() {
+        errMsg = 'Select House No!';
+      });
+      returningValue = !returningValue;
+    } else if (!LoginPage.houseAreaSelected) {
+      setState(() {
+        errMsg = 'Select House Area!';
+      });
+      returningValue = !returningValue;
+    } else if (!LoginPage.housePropertySelected) {
+      setState(() {
+        errMsg = 'Select House Property!';
+      });
+      returningValue = !returningValue;
+    } else if (!passwordValidator()) {
+      if (passwordController.text.isEmpty) {
+        setState(() {
+          errMsg = 'Enter valid password!';
+        });
+      } else {
+        setState(() {
+          errMsg =
+              'Your password should be at least 6 characters and has a combination of both lowercase letters and numbers!';
+        });
+      }
+      returningValue = !returningValue;
+    } else if (!confirmPasswordMatch()) {
+      setState(() {
+        errMsg = 'Password did\'nt match!';
+      });
+      returningValue = !returningValue;
+    }
+
+    if (returningValue) {
+      MyAutocomplete.streetController = '';
+      setState(() {
+        errMsg = '';
+      });
+      return true;
+    }
+
+    return false;
+  }
 
   void signUserIn() {
     Navigator.pushReplacementNamed(context, Home.routeName);
   }
 
   void signUserUp() {
-    Navigator.pushReplacementNamed(context, Home.routeName);
+    if (signupAuthentication()) {
+      Navigator.pushNamed(context, Home.routeName);
+    }
   }
 
   void tootgleAuthScreen() {
@@ -65,12 +163,15 @@ class _LoginPageState extends State<LoginPage> {
       mobileController.clear();
       passwordController.clear();
       confirmPasswordController.clear();
+      LoginPage.houseNoSelected = false;
+      LoginPage.houseAreaSelected = false;
+      LoginPage.housePropertySelected = false;
+      errMsg = '';
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: SafeArea(
@@ -99,13 +200,18 @@ class _LoginPageState extends State<LoginPage> {
                   controller: cnicController,
                   hintText: 'CNIC',
                   obscureText: false,
+                  prefixIcon: CupertinoIcons.doc_text_viewfinder,
                   textInputType: TextInputType.number,
                   filteringTextInputFormatter:
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                   maxLength: 13,
                   minLength: 13,
                   exactLength: 13,
-                  check: (cnicController.text.isEmpty) ? false : true,
+                  check: (cnicController.text.isNotEmpty &&
+                          cnicController.text.length == 13)
+                      ? true
+                      : false,
+                  hideCheckMark: (auth == AuthScreen.signIn) ? true : false,
                 ),
                 const SizedBox(height: 10),
                 (auth == AuthScreen.signUp)
@@ -115,16 +221,19 @@ class _LoginPageState extends State<LoginPage> {
                             controller: fullnameController,
                             hintText: 'Full Name',
                             obscureText: false,
+                            prefixIcon: Icons.text_fields_rounded,
                             textInputType: TextInputType.name,
                             filteringTextInputFormatter:
                                 FilteringTextInputFormatter.allow(
-                                    RegExp(r'[a-zA-Z]')),
+                                    RegExp(r'[a-zA-Z ]')),
                             maxLength: 25,
                             minLength: 3,
                             exactLength: 200,
-                            check: (fullnameController.text.isEmpty)
-                                ? false
-                                : true,
+                            check: (fullnameController.text.isNotEmpty &&
+                                    fullnameController.text.length >= 3)
+                                ? true
+                                : false,
+                            hideCheckMark: false,
                           ),
                           const SizedBox(height: 10),
                         ],
@@ -135,8 +244,9 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           MyTextField(
                             controller: mobileController,
-                            hintText: 'Mobile',
+                            hintText: 'Mobile (Whatsapp)',
                             obscureText: false,
+                            prefixIcon: CupertinoIcons.phone_fill,
                             textInputType: TextInputType.number,
                             filteringTextInputFormatter:
                                 FilteringTextInputFormatter.allow(
@@ -144,8 +254,11 @@ class _LoginPageState extends State<LoginPage> {
                             maxLength: 11,
                             minLength: 11,
                             exactLength: 11,
-                            check:
-                                (mobileController.text.isEmpty) ? false : true,
+                            check: (mobileController.text.isNotEmpty &&
+                                    mobileController.text.length == 11)
+                                ? true
+                                : false,
+                            hideCheckMark: false,
                           ),
                           const SizedBox(height: 10),
                         ],
@@ -156,6 +269,7 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           MyAutocomplete(
                             hintText: 'Street',
+                            prefixIcon: Icons.add_road,
                             textInputType: TextInputType.text,
                             filteringTextInputFormatter:
                                 FilteringTextInputFormatter.allow(
@@ -171,6 +285,7 @@ class _LoginPageState extends State<LoginPage> {
                           MyDropdown(
                             hintText: 'Select House No',
                             list: houseNo,
+                            prefixIcon: CupertinoIcons.number,
                           ),
                           const SizedBox(height: 10),
                         ],
@@ -182,126 +297,41 @@ class _LoginPageState extends State<LoginPage> {
                           MyDropdown(
                             hintText: 'Select House Area',
                             list: houseArea,
+                            prefixIcon: CupertinoIcons
+                                .rectangle_arrow_up_right_arrow_down_left,
                           ),
                           const SizedBox(height: 10),
                         ],
                       )
                     : const SizedBox(),
-                /*(auth == AuthScreen.SignUp)
+                (auth == AuthScreen.signUp)
                     ? Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              children: [
-                                Radio(
-                                  value: houseArea[0],
-                                  groupValue: true,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      houseArea[0] = true;
-                                      houseArea[1] = false;
-                                      houseArea[2] = false;
-                                      houseArea[3] = false;
-                                    });
-                                  },
-                                ),
-                                Text('7 OR less than 7 Marla',
-                                    style: TextStyle(
-                                        fontWeight: (houseArea[0])
-                                            ? FontWeight.bold
-                                            : FontWeight.normal)),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              children: [
-                                Radio(
-                                  value: houseArea[1],
-                                  groupValue: true,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      houseArea[0] = false;
-                                      houseArea[1] = true;
-                                      houseArea[2] = false;
-                                      houseArea[3] = false;
-                                    });
-                                  },
-                                ),
-                                Text('Above than 7 AND less than 10 Marla',
-                                    style: TextStyle(
-                                        fontWeight: (houseArea[1])
-                                            ? FontWeight.bold
-                                            : FontWeight.normal)),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              children: [
-                                Radio(
-                                  value: houseArea[2],
-                                  groupValue: true,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      houseArea[0] = false;
-                                      houseArea[1] = false;
-                                      houseArea[2] = true;
-                                      houseArea[3] = false;
-                                    });
-                                  },
-                                ),
-                                Text(
-                                    '10 OR above than 10 AND less than 1 Kanal',
-                                    style: TextStyle(
-                                        fontWeight: (houseArea[2])
-                                            ? FontWeight.bold
-                                            : FontWeight.normal)),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              children: [
-                                Radio(
-                                  value: houseArea[3],
-                                  groupValue: true,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      houseArea[0] = false;
-                                      houseArea[1] = false;
-                                      houseArea[2] = false;
-                                      houseArea[3] = true;
-                                    });
-                                  },
-                                ),
-                                Text('1 Kanal OR above than 1 Kanal',
-                                    style: TextStyle(
-                                        fontWeight: (houseArea[3])
-                                            ? FontWeight.bold
-                                            : FontWeight.normal)),
-                              ],
-                            ),
+                          MyDropdown(
+                            hintText: 'Select House Property',
+                            list: houseProperty,
+                            prefixIcon: CupertinoIcons.house,
                           ),
                           const SizedBox(height: 10),
                         ],
                       )
-                    : const SizedBox(),*/
+                    : const SizedBox(),
                 MyTextField(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
+                  prefixIcon: CupertinoIcons.padlock,
                   textInputType: TextInputType.text,
                   filteringTextInputFormatter:
                       FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]')),
                   maxLength: 20,
                   minLength: 6,
                   exactLength: 200,
-                  check: (passwordController.text.isEmpty) ? false : true,
+                  check: (passwordController.text.isNotEmpty &&
+                          passwordValidator())
+                      ? true
+                      : false,
+                  hideCheckMark: (auth == AuthScreen.signIn) ? true : false,
                 ),
                 (auth == AuthScreen.signUp)
                     ? Column(
@@ -311,6 +341,7 @@ class _LoginPageState extends State<LoginPage> {
                             controller: confirmPasswordController,
                             hintText: 'Confirm Password',
                             obscureText: true,
+                            prefixIcon: CupertinoIcons.padlock,
                             textInputType: TextInputType.text,
                             filteringTextInputFormatter:
                                 FilteringTextInputFormatter.allow(
@@ -321,6 +352,7 @@ class _LoginPageState extends State<LoginPage> {
                             check: (confirmPasswordController.text.isEmpty)
                                 ? false
                                 : true,
+                            hideCheckMark: false,
                           ),
                         ],
                       )
@@ -343,6 +375,31 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                 const SizedBox(height: 25),
+                (auth == AuthScreen.signUp && errMsg != '')
+                    ? Column(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 25),
+                            margin: const EdgeInsets.symmetric(horizontal: 25),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.red),
+                            child: Text(
+                              errMsg,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          const SizedBox(height: 15),
+                        ],
+                      )
+                    : const SizedBox(),
                 MyButton(
                   btnText: (auth == AuthScreen.signIn) ? 'Sign in' : 'Sign up',
                   onTap: (auth == AuthScreen.signIn)
@@ -350,7 +407,7 @@ class _LoginPageState extends State<LoginPage> {
                           signUserIn();
                         }
                       : () {
-                          signUserIn();
+                          signUserUp();
                         },
                 ),
                 const SizedBox(height: 50),

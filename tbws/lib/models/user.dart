@@ -1,12 +1,10 @@
-enum HouseProperty { owner, rental }
-
 class User {
   String userCNIC;
   String userName;
   String userMobile;
   String userStreet;
   String houseArea;
-  HouseProperty userHouseProperty;
+  String userHouseProperty;
   String userHouseNo;
   String password;
 

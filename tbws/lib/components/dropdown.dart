@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../pages/login_page.dart';
+
 class MyDropdown extends StatefulWidget {
   final String hintText;
   final List<String> list;
+  final IconData prefixIcon;
 
-  MyDropdown({required this.hintText, required this.list});
+  MyDropdown(
+      {required this.hintText, required this.list, required this.prefixIcon});
   @override
   State<StatefulWidget> createState() => _MyDropdownState();
 }
@@ -17,6 +21,7 @@ class _MyDropdownState extends State<MyDropdown> {
       padding: const EdgeInsets.symmetric(horizontal: 25),
       child: DropdownButtonFormField(
         decoration: InputDecoration(
+          prefixIcon: Icon(widget.prefixIcon, color: Colors.grey[500]),
           enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Colors.white),
             borderRadius: BorderRadius.circular(5),
@@ -55,6 +60,13 @@ class _MyDropdownState extends State<MyDropdown> {
           setState(
             () {
               _dropDownValue = val!;
+              if (widget.hintText == 'Select House No') {
+                LoginPage.houseNoSelected = true;
+              } else if (widget.hintText == 'Select House Area') {
+                LoginPage.houseAreaSelected = true;
+              } else if (widget.hintText == 'Select House Property') {
+                LoginPage.housePropertySelected = true;
+              }
             },
           );
         },
