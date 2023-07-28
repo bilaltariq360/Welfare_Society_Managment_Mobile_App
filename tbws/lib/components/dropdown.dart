@@ -38,7 +38,7 @@ class _MyDropdownState extends State<MyDropdown> {
           filled: true,
           fillColor: Colors.grey.shade200,
         ),
-        dropdownColor: Colors.grey.shade200,
+        dropdownColor: Colors.grey.shade300,
         hint: _dropDownValue == null
             ? const Text('Dropdown')
             : Text(

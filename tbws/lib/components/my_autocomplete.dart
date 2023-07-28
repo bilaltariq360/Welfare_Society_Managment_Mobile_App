@@ -77,48 +77,35 @@ class MyAutocomplete extends StatefulWidget {
 
 class _MyAutocompleteState extends State<MyAutocomplete> {
   bool check = false;
+  final TextEditingController _textEditingController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  List<String> getFilteredStreets(String query) {
+    // Implement your filtering logic here.
+    return MyAutocomplete.streets.where((street) {
+      return street.toLowerCase().contains(query.toLowerCase());
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: Autocomplete<String>(
-          optionsBuilder: (TextEditingValue textEditingValue) {
-        if (textEditingValue.text.isEmpty) {
-          return const Iterable<String>.empty();
-        } else {
-          bool found = false;
-          for (var street in MyAutocomplete.streets) {
-            if (street.toLowerCase() == textEditingValue.text.toLowerCase()) {
-              setState(() {
-                LoginPage.streetController = textEditingValue.text;
-                print(LoginPage.streetController);
-                check = true;
-                found = true;
-              });
-            }
-          }
-          if (!found) {
-            setState(() {
-              check = false;
-            });
-          }
-        }
-        return MyAutocomplete.streets.where(
-          (String street) {
-            return street
-                .toLowerCase()
-                .contains(textEditingValue.text.toLowerCase());
-          },
-        );
-      }, fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
-        return TextField(
-          keyboardType: widget.textInputType,
-          inputFormatters: [widget.filteringTextInputFormatter],
-          controller: controller,
-          focusNode: focusNode,
-          onEditingComplete: onEditingComplete,
-          decoration: InputDecoration(
+      child: Column(
+        children: [
+          TextField(
+            keyboardType: widget.textInputType,
+            inputFormatters: [widget.filteringTextInputFormatter],
+            controller: _textEditingController,
+            focusNode: _focusNode,
+            decoration: InputDecoration(
               prefixIcon: Icon(widget.prefixIcon, color: Colors.grey[500]),
               enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.white),
@@ -130,11 +117,69 @@ class _MyAutocompleteState extends State<MyAutocomplete> {
               filled: true,
               hintText: 'Street',
               hintStyle: TextStyle(color: Colors.grey[500]),
-              suffixIcon: (check)
-                  ? const Icon(Icons.check, color: Colors.green)
-                  : null),
-        );
-      }),
+              suffixIcon:
+                  (check) ? const Icon(Icons.check, color: Colors.green) : null,
+            ),
+            onChanged: (value) {
+              bool found = false;
+              setState(() {
+                for (var street in MyAutocomplete.streets) {
+                  if (street.toLowerCase() == value.toLowerCase()) {
+                    check = true;
+                    found = true;
+                  }
+                }
+
+                if (!found) {
+                  check = false;
+                }
+              });
+            },
+          ),
+          if (_focusNode.hasFocus && _textEditingController.text.isNotEmpty)
+            SizedBox(
+              height: (double.parse(
+                              getFilteredStreets(_textEditingController.text)
+                                  .length
+                                  .toString()) *
+                          56 >
+                      500)
+                  ? 280
+                  : double.parse(getFilteredStreets(_textEditingController.text)
+                          .length
+                          .toString()) *
+                      56,
+              child: Material(
+                elevation: 4,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount:
+                      getFilteredStreets(_textEditingController.text).length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final String option =
+                        getFilteredStreets(_textEditingController.text)[index];
+                    LoginPage.streetController =
+                        getFilteredStreets(_textEditingController.text)[index];
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _textEditingController.text = option;
+                          _focusNode.unfocus();
+                          check = true;
+                        });
+                      },
+                      child: ListTile(
+                        tileColor: Colors.grey[300],
+                        textColor: Colors.grey[600],
+                        title: Text(option),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
