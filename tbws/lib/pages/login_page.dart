@@ -3,9 +3,10 @@ import 'package:tbws/components/dropdown.dart';
 import 'package:tbws/components/my_autocomplete.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '/components/my_button.dart';
 import '/components/my_textfield.dart';
-import 'home_page.dart';
 
 enum AuthScreen { signIn, signUp }
 
@@ -17,6 +18,14 @@ class LoginPage extends StatefulWidget {
   static bool houseAreaSelected = false;
 
   static bool housePropertySelected = false;
+
+  static String streetController = '';
+
+  static String houseNoController = '';
+
+  static String houseAreaController = '';
+
+  static String housePropertyController = '';
 
   LoginPage({super.key});
 
@@ -44,10 +53,27 @@ class _LoginPageState extends State<LoginPage> {
   List<String> houseNo = List.generate(70, (index) => (index + 1).toString());
 
   List<String> houseArea = [
-    '1   <=   Marla   <=   7',
-    '7   <   Marla   <   10',
-    '10   <=   Marla   <   1(Kanal)',
-    '1   <=   Kanal'
+    '1 Marla',
+    '2 Marla',
+    '3 Marla',
+    '4 Marla',
+    '5 Marla',
+    '6 Marla',
+    '7 Marla',
+    '8 Marla',
+    '9 Marla',
+    '10 Marla',
+    '11 Marla',
+    '12 Marla',
+    '13 Marla',
+    '14 Marla',
+    '15 Marla',
+    '16 Marla',
+    '17 Marla',
+    '18 Marla',
+    '19 Marla',
+    '20 Marla (1 Kanal)',
+    'Above than 20 Marla (1 Kanal)'
   ];
 
   List<String> houseProperty = ['Owner', 'Rental'];
@@ -70,8 +96,7 @@ class _LoginPageState extends State<LoginPage> {
     bool returningValue = true;
 
     for (var street in MyAutocomplete.streets) {
-      if (street.toLowerCase() ==
-          MyAutocomplete.streetController.toLowerCase()) {
+      if (street.toLowerCase() == LoginPage.streetController.toLowerCase()) {
         streetMatch = true;
       }
     }
@@ -148,10 +173,43 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void signUserUp() {
+  void signUserUp() async {
     if (signupAuthentication()) {
-      Navigator.pushNamed(context, Home.routeName);
+      var url =
+          'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/user_registration.json';
+      http.post(Uri.parse(url),
+          body: json.encode({
+            'CNIC': cnicController.text,
+            'Full Name': fullnameController.text,
+            'Mobile': mobileController.text,
+            'Street': LoginPage.streetController,
+            'House No': LoginPage.houseNoController,
+            'House Area': LoginPage.houseAreaController,
+            'House Property': LoginPage.housePropertyController,
+            'Password': passwordController.text
+          }));
+
+      setState(() {
+        clearControllerData();
+        auth = AuthScreen.signIn;
+      });
     }
+  }
+
+  void clearControllerData() {
+    cnicController.clear();
+    fullnameController.clear();
+    mobileController.clear();
+    passwordController.clear();
+    confirmPasswordController.clear();
+    LoginPage.houseNoSelected = false;
+    LoginPage.houseAreaSelected = false;
+    LoginPage.housePropertySelected = false;
+    LoginPage.streetController = '';
+    LoginPage.houseNoController = '';
+    LoginPage.houseAreaController = '';
+    LoginPage.housePropertyController = '';
+    errMsg = '';
   }
 
   void tootgleAuthScreen() {
@@ -161,15 +219,7 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         auth = AuthScreen.signIn;
       }
-      cnicController.clear();
-      fullnameController.clear();
-      mobileController.clear();
-      passwordController.clear();
-      confirmPasswordController.clear();
-      LoginPage.houseNoSelected = false;
-      LoginPage.houseAreaSelected = false;
-      LoginPage.housePropertySelected = false;
-      errMsg = '';
+      clearControllerData();
     });
   }
 
@@ -334,7 +384,8 @@ class _LoginPageState extends State<LoginPage> {
                   minLength: 6,
                   exactLength: 200,
                   check: (passwordController.text.isNotEmpty &&
-                          passwordValidator())
+                          passwordValidator() &&
+                          auth == AuthScreen.signUp)
                       ? true
                       : false,
                   hideCheckMark: (auth == AuthScreen.signIn) ? true : false,
@@ -355,9 +406,10 @@ class _LoginPageState extends State<LoginPage> {
                             maxLength: 20,
                             minLength: 6,
                             exactLength: 200,
-                            check: (confirmPasswordController.text.isEmpty)
-                                ? false
-                                : true,
+                            check: (confirmPasswordController.text.isNotEmpty &&
+                                    confirmPasswordMatch())
+                                ? true
+                                : false,
                             hideCheckMark: false,
                           ),
                         ],

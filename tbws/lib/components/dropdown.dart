@@ -62,10 +62,13 @@ class _MyDropdownState extends State<MyDropdown> {
               _dropDownValue = val!;
               if (widget.hintText == 'Select House No') {
                 LoginPage.houseNoSelected = true;
+                LoginPage.houseNoController = val;
               } else if (widget.hintText == 'Select House Area') {
                 LoginPage.houseAreaSelected = true;
+                LoginPage.houseAreaController = val;
               } else if (widget.hintText == 'Select House Property') {
                 LoginPage.housePropertySelected = true;
+                LoginPage.housePropertyController = val;
               }
             },
           );

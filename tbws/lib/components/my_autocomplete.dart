@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../pages/login_page.dart';
+
 class MyAutocomplete extends StatefulWidget {
   final String hintText;
   final TextInputType textInputType;
@@ -89,6 +91,8 @@ class _MyAutocompleteState extends State<MyAutocomplete> {
           for (var street in MyAutocomplete.streets) {
             if (street.toLowerCase() == textEditingValue.text.toLowerCase()) {
               setState(() {
+                LoginPage.streetController = textEditingValue.text;
+                print(LoginPage.streetController);
                 check = true;
                 found = true;
               });
@@ -102,7 +106,6 @@ class _MyAutocompleteState extends State<MyAutocomplete> {
         }
         return MyAutocomplete.streets.where(
           (String street) {
-            MyAutocomplete.streetController = textEditingValue.text;
             return street
                 .toLowerCase()
                 .contains(textEditingValue.text.toLowerCase());

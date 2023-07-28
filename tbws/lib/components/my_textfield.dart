@@ -67,7 +67,8 @@ class _MyTextFieldState extends State<MyTextField> {
                     });
                   }
                 } else if (widget.hintText == 'Confirm Password') {
-                  if (text == LoginPage.passwordForConfirmPassword) {
+                  if (text == LoginPage.passwordForConfirmPassword &&
+                      text.isNotEmpty) {
                     setState(() {
                       widget.check = true;
                     });
