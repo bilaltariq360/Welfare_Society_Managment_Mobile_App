@@ -13,6 +13,8 @@ enum AuthScreen { signIn, signUp }
 class LoginPage extends StatefulWidget {
   static String? passwordForConfirmPassword;
 
+  bool loading = false;
+
   static bool houseNoSelected = false;
 
   static bool houseAreaSelected = false;
@@ -35,6 +37,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String errMsg = '';
+
+  String succMsg = '';
 
   AuthScreen auth = AuthScreen.signIn;
 
@@ -173,25 +177,35 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void signUserUp() async {
+  void signUserUp() {
     if (signupAuthentication()) {
+      setState(() {
+        widget.loading = true;
+      });
       var url =
           'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/user_registration.json';
-      http.post(Uri.parse(url),
-          body: json.encode({
-            'CNIC': cnicController.text,
-            'Full Name': fullnameController.text,
-            'Mobile': mobileController.text,
-            'Street': LoginPage.streetController,
-            'House No': LoginPage.houseNoController,
-            'House Area': LoginPage.houseAreaController,
-            'House Property': LoginPage.housePropertyController,
-            'Password': passwordController.text
-          }));
-
-      setState(() {
-        clearControllerData();
-        auth = AuthScreen.signIn;
+      http
+          .post(Uri.parse(url),
+              body: json.encode({
+                'CNIC': cnicController.text,
+                'Full Name': fullnameController.text,
+                'Mobile': mobileController.text,
+                'Street': LoginPage.streetController,
+                'House No': LoginPage.houseNoController,
+                'House Area': LoginPage.houseAreaController,
+                'House Property': LoginPage.housePropertyController,
+                'Password': passwordController.text
+              }))
+          .then((response) {
+        setState(() {
+          succMsg = 'Registered successfully!';
+          Future.delayed(const Duration(milliseconds: 1500)).then((_) {
+            setState(() {
+              widget.loading = false;
+              tootgleAuthScreen();
+            });
+          });
+        });
       });
     }
   }
@@ -210,6 +224,7 @@ class _LoginPageState extends State<LoginPage> {
     LoginPage.houseAreaController = '';
     LoginPage.housePropertyController = '';
     errMsg = '';
+    succMsg = '';
   }
 
   void tootgleAuthScreen() {
@@ -457,42 +472,79 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 15),
                         ],
                       )
+                    : (widget.loading && succMsg.isEmpty)
+                        ? const Column(children: [
+                            CircularProgressIndicator(
+                              color: Colors.black,
+                            ),
+                            SizedBox(height: 15),
+                          ])
+                        : (widget.loading && succMsg.isNotEmpty)
+                            ? Column(
+                                children: [
+                                  Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 15, horizontal: 25),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 25),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: Colors.green),
+                                    child: Text(
+                                      succMsg,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 15),
+                                ],
+                              )
+                            : const SizedBox(),
+                (!widget.loading)
+                    ? MyButton(
+                        btnText:
+                            (auth == AuthScreen.signIn) ? 'Sign in' : 'Sign up',
+                        onTap: (auth == AuthScreen.signIn)
+                            ? () {
+                                signUserIn();
+                              }
+                            : () {
+                                signUserUp();
+                              },
+                      )
                     : const SizedBox(),
-                MyButton(
-                  btnText: (auth == AuthScreen.signIn) ? 'Sign in' : 'Sign up',
-                  onTap: (auth == AuthScreen.signIn)
-                      ? () {
-                          signUserIn();
-                        }
-                      : () {
-                          signUserUp();
-                        },
-                ),
                 const SizedBox(height: 50),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      (auth == AuthScreen.signUp)
-                          ? 'Already have account?'
-                          : 'Not a member?',
-                      style: TextStyle(color: Colors.grey[700]),
-                    ),
-                    const SizedBox(width: 4),
-                    GestureDetector(
-                      onTap: tootgleAuthScreen,
-                      child: Text(
-                        (auth == AuthScreen.signIn)
-                            ? 'Register now'
-                            : 'Sign in',
-                        style: const TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                (!widget.loading)
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            (auth == AuthScreen.signUp)
+                                ? 'Already have account?'
+                                : 'Not a member?',
+                            style: TextStyle(color: Colors.grey[700]),
+                          ),
+                          const SizedBox(width: 4),
+                          GestureDetector(
+                            onTap: tootgleAuthScreen,
+                            child: Text(
+                              (auth == AuthScreen.signIn)
+                                  ? 'Register now'
+                                  : 'Sign in',
+                              style: const TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : const SizedBox(),
                 const SizedBox(
                   height: 30,
                 ),

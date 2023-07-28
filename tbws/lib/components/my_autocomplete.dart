@@ -158,12 +158,11 @@ class _MyAutocompleteState extends State<MyAutocomplete> {
                   itemBuilder: (BuildContext context, int index) {
                     final String option =
                         getFilteredStreets(_textEditingController.text)[index];
-                    LoginPage.streetController =
-                        getFilteredStreets(_textEditingController.text)[index];
                     return GestureDetector(
                       onTap: () {
                         setState(() {
                           _textEditingController.text = option;
+                          LoginPage.streetController = option;
                           _focusNode.unfocus();
                           check = true;
                         });
