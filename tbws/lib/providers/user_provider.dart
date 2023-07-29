@@ -1,9 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import '../models/user.dart';
 
+class Noti {
+  final DateTime date;
+  final String sender;
+  final String message;
+
+  Noti({required this.date, required this.message, required this.sender});
+}
+
 class UserProvider extends ChangeNotifier {
   User? userDetails;
+  List<Noti> notifications = [];
 
   void setUserDetail(
       String userCNIC,
@@ -27,7 +39,19 @@ class UserProvider extends ChangeNotifier {
         isAdmin: isAdmin);
   }
 
-  get getUserDetails {
-    return userDetails!;
+  void loadNotifications() {
+    var url =
+        'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/notifications.json';
+
+    http.get(Uri.parse(url)).then((response) {
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      extractedData.forEach((fireBaseId, noti) {
+        notifications.add(Noti(
+            sender: noti['Sender'],
+            date: DateTime.now(),
+            message: noti['Message']));
+      });
+      notifyListeners();
+    });
   }
 }
