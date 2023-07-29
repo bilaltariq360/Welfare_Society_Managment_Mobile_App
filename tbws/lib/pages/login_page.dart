@@ -14,6 +14,8 @@ import 'home_page.dart';
 enum AuthScreen { signIn, signUp }
 
 class LoginPage extends StatefulWidget {
+  static String routeName = '/signin';
+
   static String? passwordForConfirmPassword;
 
   bool loading = false;
@@ -191,6 +193,15 @@ class _LoginPageState extends State<LoginPage> {
     extractedData.forEach((fireBaseId, userData) {
       if (userData['CNIC'] == cnicController.text &&
           userData['Password'] == passwordController.text) {
+        Provider.of<UserProvider>(context, listen: false).setUserDetail(
+            userData['CNIC'],
+            userData['Full Name'],
+            userData['Mobile'],
+            userData['Street'],
+            userData['House Area'],
+            userData['House Property'],
+            userData['House No'],
+            userData['Password']);
         found = true;
       }
     });

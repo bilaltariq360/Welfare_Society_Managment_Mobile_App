@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tbws/components/my_button.dart';
+
+import '../providers/user_provider.dart';
+import 'login_page.dart';
 
 class Profile extends StatelessWidget {
-  const Profile({super.key});
+  Profile({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const SingleChildScrollView(
+    var provider =
+        Provider.of<UserProvider>(context, listen: false).userDetails!;
+    return SingleChildScrollView(
       child: Column(
         children: [
-          SizedBox(height: 15),
-          Row(
+          const SizedBox(height: 15),
+          const Row(
             children: [
               SizedBox(width: 15),
               Icon(
@@ -27,11 +34,11 @@ class Profile extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 50),
+          const SizedBox(height: 50),
           Row(
             children: [
-              SizedBox(width: 15),
-              Text(
+              const SizedBox(width: 15),
+              const Text(
                 'CNIC:  ',
                 style: TextStyle(
                     fontSize: 18,
@@ -39,16 +46,16 @@ class Profile extends StatelessWidget {
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                '35201-9892-753-7',
-                style: TextStyle(fontSize: 18, color: Colors.white),
+                provider.userCNIC,
+                style: const TextStyle(fontSize: 18, color: Colors.white),
               ),
             ],
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           Row(
             children: [
-              SizedBox(width: 15),
-              Text(
+              const SizedBox(width: 15),
+              const Text(
                 'Name:  ',
                 style: TextStyle(
                     fontSize: 18,
@@ -56,16 +63,16 @@ class Profile extends StatelessWidget {
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                'Bilal Tariq',
-                style: TextStyle(fontSize: 18, color: Colors.white),
+                provider.userName,
+                style: const TextStyle(fontSize: 18, color: Colors.white),
               ),
             ],
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           Row(
             children: [
-              SizedBox(width: 15),
-              Text(
+              const SizedBox(width: 15),
+              const Text(
                 'Mobile:  ',
                 style: TextStyle(
                     fontSize: 18,
@@ -73,16 +80,16 @@ class Profile extends StatelessWidget {
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                '03024813755',
-                style: TextStyle(fontSize: 18, color: Colors.white),
+                provider.userMobile,
+                style: const TextStyle(fontSize: 18, color: Colors.white),
               ),
             ],
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           Row(
             children: [
               SizedBox(width: 15),
-              Text(
+              const Text(
                 'Street:  ',
                 style: TextStyle(
                     fontSize: 18,
@@ -90,16 +97,16 @@ class Profile extends StatelessWidget {
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                'Sarooj',
-                style: TextStyle(fontSize: 18, color: Colors.white),
+                provider.userStreet,
+                style: const TextStyle(fontSize: 18, color: Colors.white),
               ),
             ],
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           Row(
             children: [
               SizedBox(width: 15),
-              Text(
+              const Text(
                 'House Area:  ',
                 style: TextStyle(
                     fontSize: 18,
@@ -107,16 +114,16 @@ class Profile extends StatelessWidget {
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                '8 Marla',
-                style: TextStyle(fontSize: 18, color: Colors.white),
+                provider.houseArea,
+                style: const TextStyle(fontSize: 18, color: Colors.white),
               ),
             ],
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           Row(
             children: [
-              SizedBox(width: 15),
-              Text(
+              const SizedBox(width: 15),
+              const Text(
                 'House Property:  ',
                 style: TextStyle(
                     fontSize: 18,
@@ -124,16 +131,16 @@ class Profile extends StatelessWidget {
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                'Owner',
-                style: TextStyle(fontSize: 18, color: Colors.white),
+                provider.userHouseProperty,
+                style: const TextStyle(fontSize: 18, color: Colors.white),
               ),
             ],
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           Row(
             children: [
-              SizedBox(width: 15),
-              Text(
+              const SizedBox(width: 15),
+              const Text(
                 'House No.:  ',
                 style: TextStyle(
                     fontSize: 18,
@@ -141,10 +148,20 @@ class Profile extends StatelessWidget {
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                '3',
-                style: TextStyle(fontSize: 18, color: Colors.white),
+                provider.userHouseNo,
+                style: const TextStyle(fontSize: 18, color: Colors.white),
               ),
             ],
+          ),
+          const SizedBox(height: 80),
+          MyButton(
+            btnText: 'Logout',
+            onTap: () {
+              Navigator.pushReplacementNamed(context, LoginPage.routeName);
+            },
+            icon: Icons.logout_outlined,
+            backgroudColor: const Color.fromARGB(255, 194, 255, 175),
+            foregroudColor: Colors.black,
           ),
         ],
       ),

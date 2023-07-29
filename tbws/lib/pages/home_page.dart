@@ -16,9 +16,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int pageIndex = 0;
 
-  List<Widget> pages = const [
-    MyRecord(),
-    Notifications(),
+  List<Widget> pages = [
+    const MyRecord(),
+    const Notifications(),
     Profile(),
     Profile()
   ];

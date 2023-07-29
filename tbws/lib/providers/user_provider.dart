@@ -24,4 +24,8 @@ class UserProvider extends ChangeNotifier {
         userHouseNo: userHouseNo,
         password: password);
   }
+
+  get getUserDetails {
+    return userDetails!;
+  }
 }
