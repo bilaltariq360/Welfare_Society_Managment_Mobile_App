@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tbws/components/dropdown.dart';
 import 'package:tbws/components/my_autocomplete.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../providers/user_provider.dart';
 import '/components/my_button.dart';
 import '/components/my_textfield.dart';
+import 'home_page.dart';
 
 enum AuthScreen { signIn, signUp }
 
@@ -39,6 +42,8 @@ class _LoginPageState extends State<LoginPage> {
   String errMsg = '';
 
   String succMsg = '';
+
+  bool duplicateUser = false;
 
   AuthScreen auth = AuthScreen.signIn;
 
@@ -167,46 +172,98 @@ class _LoginPageState extends State<LoginPage> {
       return true;
     }
 
+    widget.loading = false;
     return false;
   }
 
-  void signUserIn() {
-    //Navigator.pushReplacementNamed(context, Home.routeName);
+  void signUserIn() async {
     setState(() {
-      errMsg = 'No record found!';
+      errMsg = '';
+      widget.loading = true;
+    });
+    bool found = false;
+    var url =
+        'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/user_registration.json';
+    http.get(Uri.parse(url));
+
+    final response = await http.get(Uri.parse(url));
+    final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    extractedData.forEach((fireBaseId, userData) {
+      if (userData['CNIC'] == cnicController.text &&
+          userData['Password'] == passwordController.text) {
+        found = true;
+      }
+    });
+
+    if (!found) {
+      setState(() {
+        errMsg = 'No record found!\nRegister yourself first';
+        widget.loading = false;
+      });
+    } else {
+      setState(() {
+        widget.loading = false;
+        clearControllerData();
+      });
+      Navigator.pushNamed(context, Home.routeName);
+    }
+  }
+
+  void checkDuplicate() {
+    var url =
+        'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/user_registration.json';
+    http.get(Uri.parse(url));
+
+    http.get(Uri.parse(url)).then((response) {
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      extractedData.forEach((fireBaseId, userData) {
+        if (userData['CNIC'] == cnicController.text ||
+            userData['Mobile'] == mobileController.text) {
+          duplicateUser = true;
+        }
+      });
+    }).then((_) {
+      if (duplicateUser) {
+        setState(() {
+          widget.loading = false;
+          errMsg = 'User already exists with the same credentials';
+        });
+      }
     });
   }
 
   void signUserUp() {
+    setState(() {
+      widget.loading = true;
+    });
     if (signupAuthentication()) {
-      setState(() {
-        widget.loading = true;
-      });
-      var url =
-          'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/user_registration.json';
-      http
-          .post(Uri.parse(url),
-              body: json.encode({
-                'CNIC': cnicController.text,
-                'Full Name': fullnameController.text,
-                'Mobile': mobileController.text,
-                'Street': LoginPage.streetController,
-                'House No': LoginPage.houseNoController,
-                'House Area': LoginPage.houseAreaController,
-                'House Property': LoginPage.housePropertyController,
-                'Password': passwordController.text
-              }))
-          .then((response) {
-        setState(() {
-          succMsg = 'Registered successfully!';
-          Future.delayed(const Duration(milliseconds: 1500)).then((_) {
-            setState(() {
-              widget.loading = false;
+      checkDuplicate();
+      if (!duplicateUser) {
+        var url =
+            'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/user_registration.json';
+        http
+            .post(Uri.parse(url),
+                body: json.encode({
+                  'CNIC': cnicController.text,
+                  'Full Name': fullnameController.text,
+                  'Mobile': mobileController.text,
+                  'Street': LoginPage.streetController,
+                  'House No': LoginPage.houseNoController,
+                  'House Area': LoginPage.houseAreaController,
+                  'House Property': LoginPage.housePropertyController,
+                  'Password': passwordController.text
+                }))
+            .then((response) {
+          setState(() {
+            succMsg = 'Registered successfully!';
+            Future.delayed(const Duration(milliseconds: 1500)).then((_) {
               tootgleAuthScreen();
             });
           });
         });
-      });
+      } else {
+        duplicateUser = false;
+      }
     }
   }
 
@@ -235,6 +292,7 @@ class _LoginPageState extends State<LoginPage> {
         auth = AuthScreen.signIn;
       }
       clearControllerData();
+      widget.loading = false;
     });
   }
 
