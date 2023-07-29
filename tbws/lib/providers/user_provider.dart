@@ -13,7 +13,8 @@ class UserProvider extends ChangeNotifier {
       String houseArea,
       String userHouseProperty,
       String userHouseNo,
-      String password) {
+      String password,
+      bool isAdmin) {
     userDetails = User(
         userCNIC: userCNIC,
         userName: userName,
@@ -22,7 +23,8 @@ class UserProvider extends ChangeNotifier {
         houseArea: houseArea,
         userHouseProperty: userHouseProperty,
         userHouseNo: userHouseNo,
-        password: password);
+        password: password,
+        isAdmin: isAdmin);
   }
 
   get getUserDetails {

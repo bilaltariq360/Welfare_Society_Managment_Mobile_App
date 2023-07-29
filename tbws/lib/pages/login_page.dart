@@ -201,7 +201,8 @@ class _LoginPageState extends State<LoginPage> {
             userData['House Area'],
             userData['House Property'],
             userData['House No'],
-            userData['Password']);
+            userData['Password'],
+            userData['Admin']);
         found = true;
       }
     });
@@ -220,10 +221,14 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void checkDuplicate() {
+  void signUserUp() {
+    setState(() {
+      errMsg = '';
+      widget.loading = true;
+    });
+
     var url =
         'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/user_registration.json';
-    http.get(Uri.parse(url));
 
     http.get(Uri.parse(url)).then((response) {
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -239,19 +244,8 @@ class _LoginPageState extends State<LoginPage> {
           widget.loading = false;
           errMsg = 'User already exists with the same credentials';
         });
-      }
-    });
-  }
-
-  void signUserUp() {
-    setState(() {
-      widget.loading = true;
-    });
-    if (signupAuthentication()) {
-      checkDuplicate();
-      if (!duplicateUser) {
-        var url =
-            'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/user_registration.json';
+        duplicateUser = false;
+      } else if (signupAuthentication()) {
         http
             .post(Uri.parse(url),
                 body: json.encode({
@@ -262,20 +256,20 @@ class _LoginPageState extends State<LoginPage> {
                   'House No': LoginPage.houseNoController,
                   'House Area': LoginPage.houseAreaController,
                   'House Property': LoginPage.housePropertyController,
-                  'Password': passwordController.text
+                  'Password': passwordController.text,
+                  'Admin': false,
                 }))
             .then((response) {
           setState(() {
             succMsg = 'Registered successfully!';
             Future.delayed(const Duration(milliseconds: 1500)).then((_) {
+              widget.loading = false;
               tootgleAuthScreen();
             });
           });
         });
-      } else {
-        duplicateUser = false;
       }
-    }
+    });
   }
 
   void clearControllerData() {

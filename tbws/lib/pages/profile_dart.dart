@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tbws/components/my_button.dart';
+import 'package:tbws/style.dart';
 
 import '../providers/user_provider.dart';
 import 'login_page.dart';
@@ -38,11 +39,11 @@ class Profile extends StatelessWidget {
           Row(
             children: [
               const SizedBox(width: 15),
-              const Text(
+              Text(
                 'CNIC:  ',
                 style: TextStyle(
                     fontSize: 18,
-                    color: Color.fromARGB(255, 194, 255, 175),
+                    color: Style.themeLight,
                     fontWeight: FontWeight.bold),
               ),
               Text(
@@ -55,11 +56,11 @@ class Profile extends StatelessWidget {
           Row(
             children: [
               const SizedBox(width: 15),
-              const Text(
+              Text(
                 'Name:  ',
                 style: TextStyle(
                     fontSize: 18,
-                    color: Color.fromARGB(255, 194, 255, 175),
+                    color: Style.themeLight,
                     fontWeight: FontWeight.bold),
               ),
               Text(
@@ -72,11 +73,11 @@ class Profile extends StatelessWidget {
           Row(
             children: [
               const SizedBox(width: 15),
-              const Text(
+              Text(
                 'Mobile:  ',
                 style: TextStyle(
                     fontSize: 18,
-                    color: Color.fromARGB(255, 194, 255, 175),
+                    color: Style.themeLight,
                     fontWeight: FontWeight.bold),
               ),
               Text(
@@ -89,11 +90,11 @@ class Profile extends StatelessWidget {
           Row(
             children: [
               SizedBox(width: 15),
-              const Text(
+              Text(
                 'Street:  ',
                 style: TextStyle(
                     fontSize: 18,
-                    color: Color.fromARGB(255, 194, 255, 175),
+                    color: Style.themeLight,
                     fontWeight: FontWeight.bold),
               ),
               Text(
@@ -105,12 +106,12 @@ class Profile extends StatelessWidget {
           const SizedBox(height: 15),
           Row(
             children: [
-              SizedBox(width: 15),
-              const Text(
+              const SizedBox(width: 15),
+              Text(
                 'House Area:  ',
                 style: TextStyle(
                     fontSize: 18,
-                    color: Color.fromARGB(255, 194, 255, 175),
+                    color: Style.themeLight,
                     fontWeight: FontWeight.bold),
               ),
               Text(
@@ -123,11 +124,11 @@ class Profile extends StatelessWidget {
           Row(
             children: [
               const SizedBox(width: 15),
-              const Text(
+              Text(
                 'House Property:  ',
                 style: TextStyle(
                     fontSize: 18,
-                    color: Color.fromARGB(255, 194, 255, 175),
+                    color: Style.themeLight,
                     fontWeight: FontWeight.bold),
               ),
               Text(
@@ -140,11 +141,11 @@ class Profile extends StatelessWidget {
           Row(
             children: [
               const SizedBox(width: 15),
-              const Text(
+              Text(
                 'House No.:  ',
                 style: TextStyle(
                     fontSize: 18,
-                    color: Color.fromARGB(255, 194, 255, 175),
+                    color: Style.themeLight,
                     fontWeight: FontWeight.bold),
               ),
               Text(
@@ -160,7 +161,7 @@ class Profile extends StatelessWidget {
               Navigator.pushReplacementNamed(context, LoginPage.routeName);
             },
             icon: Icons.logout_outlined,
-            backgroudColor: const Color.fromARGB(255, 194, 255, 175),
+            backgroudColor: Style.themeLight,
             foregroudColor: Colors.black,
           ),
         ],

@@ -1,12 +1,13 @@
 class User {
-  String userCNIC;
-  String userName;
-  String userMobile;
-  String userStreet;
-  String houseArea;
-  String userHouseProperty;
-  String userHouseNo;
-  String password;
+  final String userCNIC;
+  final String userName;
+  final String userMobile;
+  final String userStreet;
+  final String houseArea;
+  final String userHouseProperty;
+  final String userHouseNo;
+  final String password;
+  final bool isAdmin;
 
   User(
       {required this.userCNIC,
@@ -16,5 +17,6 @@ class User {
       required this.houseArea,
       required this.userHouseProperty,
       required this.userHouseNo,
-      required this.password});
+      required this.password,
+      required this.isAdmin});
 }

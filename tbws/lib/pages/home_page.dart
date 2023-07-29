@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:provider/provider.dart';
+import 'package:tbws/components/my_textfield.dart';
 import 'package:tbws/pages/my_records_page.dart';
 import 'package:tbws/pages/notifications_page.dart';
 import 'package:tbws/pages/profile_dart.dart';
+
+import '../components/functions.dart';
+import '../providers/user_provider.dart';
+import '../style.dart';
 
 class Home extends StatefulWidget {
   static String routeName = '/home';
@@ -18,26 +25,40 @@ class _HomeState extends State<Home> {
 
   List<Widget> pages = [
     const MyRecord(),
-    const Notifications(),
+    Notifications(),
     Profile(),
     Profile()
   ];
 
   @override
   Widget build(BuildContext context) {
+    var provider =
+        Provider.of<UserProvider>(context, listen: false).userDetails!;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.black,
+        floatingActionButton: (provider.isAdmin && pageIndex == 1)
+            ? FloatingActionButton(
+                onPressed: () {
+                  Functions.sendNotification(context);
+                },
+                backgroundColor: Style.themeLight,
+                child: Icon(
+                  Icons.post_add,
+                  color: Style.themeDark,
+                ),
+              )
+            : null,
+        backgroundColor: Style.themeDark,
         bottomNavigationBar: Container(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-          color: const Color.fromRGBO(10, 10, 10, 1),
+          color: Style.themeDark,
           child: GNav(
             gap: 5,
             padding: const EdgeInsets.all(15),
-            backgroundColor: const Color.fromARGB(255, 10, 10, 10),
-            color: Colors.white,
-            activeColor: const Color.fromARGB(255, 10, 10, 10),
-            tabBackgroundColor: const Color.fromARGB(255, 194, 255, 175),
+            backgroundColor: Style.themeDark,
+            color: Style.themeLight,
+            activeColor: Style.themeDark,
+            tabBackgroundColor: Style.themeLight,
             onTabChange: (i) {
               setState(() {
                 pageIndex = i;

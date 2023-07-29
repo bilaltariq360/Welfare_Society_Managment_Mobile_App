@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tbws/style.dart';
 
 class NotificationCard extends StatelessWidget {
   String name;
@@ -14,7 +15,7 @@ class NotificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color.fromARGB(255, 194, 255, 175),
+      color: Style.themeUltraLight,
       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -75,7 +76,7 @@ class NotificationCard extends StatelessWidget {
                     wordSpacing: 1.2,
                     height: 1.3,
                     color: Colors.black87),
-                textAlign: TextAlign.end,
+                textAlign: TextAlign.start,
               ),
             ],
           ),
