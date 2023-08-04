@@ -21,6 +21,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  bool initialNotificationLoad = false;
   int pageIndex = 0;
 
   List<Widget> pages = [
@@ -34,6 +35,11 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     var provider =
         Provider.of<UserProvider>(context, listen: false).userDetails!;
+    if (!initialNotificationLoad) {
+      Provider.of<UserProvider>(context, listen: false).loadNotifications();
+      initialNotificationLoad = true;
+    }
+
     return SafeArea(
       child: Scaffold(
         floatingActionButton: (provider.isAdmin && pageIndex == 1)

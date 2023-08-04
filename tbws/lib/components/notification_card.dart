@@ -18,7 +18,7 @@ class NotificationCard extends StatelessWidget {
       color: Style.themeUltraLight,
       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
@@ -32,7 +32,8 @@ class NotificationCard extends StatelessWidget {
                   SizedBox(
                     child: Row(
                       children: [
-                        const Icon(Icons.person, color: Colors.black),
+                        const Icon(Icons.insert_link_rounded,
+                            color: Colors.black),
                         const SizedBox(width: 5),
                         Text(
                           name,
@@ -68,15 +69,18 @@ class NotificationCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 15),
-              Text(
-                message,
-                style: const TextStyle(
-                    fontSize: 15,
-                    letterSpacing: 0.2,
-                    wordSpacing: 1.2,
-                    height: 1.3,
-                    color: Colors.black87),
-                textAlign: TextAlign.start,
+              SizedBox(
+                width: double.infinity,
+                child: Text(
+                  message,
+                  style: const TextStyle(
+                      fontSize: 15,
+                      letterSpacing: 0.2,
+                      wordSpacing: 1.2,
+                      height: 1.3,
+                      color: Colors.black87),
+                  textAlign: TextAlign.start,
+                ),
               ),
             ],
           ),

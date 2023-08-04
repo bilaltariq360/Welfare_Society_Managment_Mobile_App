@@ -11,8 +11,7 @@ class Notifications extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<UserProvider>(context, listen: false);
-    provider.loadNotifications();
+    var provider = Provider.of<UserProvider>(context);
     return Column(
       children: [
         const SizedBox(height: 15),

@@ -46,12 +46,18 @@ class UserProvider extends ChangeNotifier {
     http.get(Uri.parse(url)).then((response) {
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       extractedData.forEach((fireBaseId, noti) {
-        notifications.add(Noti(
-            sender: noti['Sender'],
-            date: DateTime.now(),
-            message: noti['Message']));
+        notifications.insert(
+            0,
+            Noti(
+                sender: noti['Sender'],
+                date: DateTime.parse(noti['Date']),
+                message: noti['Message']));
       });
       notifyListeners();
     });
+  }
+
+  void clearNotifications() {
+    notifications.clear();
   }
 }

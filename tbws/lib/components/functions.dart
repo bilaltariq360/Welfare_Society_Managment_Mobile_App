@@ -85,7 +85,13 @@ class Functions extends StatelessWidget {
                               'Date': DateTime.now().toString(),
                               'Message': controller.text,
                             }))
-                        .then((value) => Navigator.of(context).pop());
+                        .then((value) {
+                      Navigator.of(context).pop();
+                      Provider.of<UserProvider>(context, listen: false)
+                          .clearNotifications();
+                      Provider.of<UserProvider>(context, listen: false)
+                          .loadNotifications();
+                    });
                   },
                 ),
               ],
