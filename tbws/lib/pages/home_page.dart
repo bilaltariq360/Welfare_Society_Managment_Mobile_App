@@ -36,6 +36,7 @@ class _HomeState extends State<Home> {
     var provider =
         Provider.of<UserProvider>(context, listen: false).userDetails!;
     if (!initialNotificationLoad) {
+      Provider.of<UserProvider>(context, listen: false).clearNotifications();
       Provider.of<UserProvider>(context, listen: false).loadNotifications();
       initialNotificationLoad = true;
     }

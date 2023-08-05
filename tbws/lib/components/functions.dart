@@ -73,6 +73,7 @@ class Functions extends StatelessWidget {
                     ],
                   ),
                   onPressed: () {
+                    Navigator.of(context).pop();
                     var url =
                         'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/notifications.json';
                     http
@@ -86,7 +87,6 @@ class Functions extends StatelessWidget {
                               'Message': controller.text,
                             }))
                         .then((value) {
-                      Navigator.of(context).pop();
                       Provider.of<UserProvider>(context, listen: false)
                           .clearNotifications();
                       Provider.of<UserProvider>(context, listen: false)
