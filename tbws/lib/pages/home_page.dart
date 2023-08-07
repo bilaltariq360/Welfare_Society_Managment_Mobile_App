@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:tbws/components/my_textfield.dart';
+import 'package:tbws/pages/collect_fund.dart';
 import 'package:tbws/pages/my_records_page.dart';
 import 'package:tbws/pages/notifications_page.dart';
 import 'package:tbws/pages/profile_dart.dart';
@@ -27,14 +26,14 @@ class _HomeState extends State<Home> {
   List<Widget> pages = [
     const MyRecord(),
     Notifications(),
+    CollectFund(),
+    CollectFund(),
     Profile(),
-    Profile()
   ];
 
   @override
   Widget build(BuildContext context) {
-    var provider =
-        Provider.of<UserProvider>(context, listen: false).userDetails!;
+    var provider = Provider.of<UserProvider>(context, listen: false);
     if (!initialNotificationLoad) {
       Provider.of<UserProvider>(context, listen: false).clearNotifications();
       Provider.of<UserProvider>(context, listen: false).loadNotifications();
@@ -43,7 +42,7 @@ class _HomeState extends State<Home> {
 
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: (provider.isAdmin && pageIndex == 1)
+        floatingActionButton: (provider.userDetails!.isAdmin && pageIndex == 1)
             ? FloatingActionButton(
                 onPressed: () {
                   Functions.sendNotification(context);
@@ -56,39 +55,47 @@ class _HomeState extends State<Home> {
               )
             : null,
         backgroundColor: Style.themeDark,
-        bottomNavigationBar: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-          color: Style.themeDark,
-          child: GNav(
-            gap: 5,
-            padding: const EdgeInsets.all(15),
-            backgroundColor: Style.themeDark,
-            color: Style.themeLight,
-            activeColor: Style.themeDark,
-            tabBackgroundColor: Style.themeLight,
-            onTabChange: (i) {
-              setState(() {
-                pageIndex = i;
-              });
-            },
-            tabs: const [
-              GButton(
-                icon: Icons.receipt_long,
-                text: 'My Records',
-              ),
-              GButton(
-                icon: Icons.notifications_active_outlined,
-                text: 'Notifications',
-              ),
-              GButton(
-                icon: Icons.feedback_outlined,
-                text: 'Complaints',
-              ),
-              GButton(
-                icon: Icons.face_outlined,
-                text: 'Profile',
-              ),
-            ],
+        bottomNavigationBar: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+            color: Style.themeDark,
+            child: GNav(
+              gap: 5,
+              padding: const EdgeInsets.all(15),
+              backgroundColor: Style.themeDark,
+              color: Style.themeLight,
+              activeColor: Style.themeDark,
+              tabBackgroundColor: Style.themeLight,
+              onTabChange: (i) {
+                setState(() {
+                  pageIndex = i;
+                });
+              },
+              tabs: [
+                const GButton(
+                  icon: Icons.receipt_long,
+                  text: 'My Records',
+                ),
+                const GButton(
+                  icon: Icons.notifications_active_outlined,
+                  text: 'Notifications',
+                ),
+                if (provider.userDetails!.isAdmin)
+                  const GButton(
+                    icon: Icons.confirmation_num_outlined,
+                    text: 'Collect Fund',
+                  ),
+                const GButton(
+                  icon: Icons.feedback_outlined,
+                  text: 'Complaints',
+                ),
+                const GButton(
+                  icon: Icons.face_outlined,
+                  text: 'Profile',
+                ),
+              ],
+            ),
           ),
         ),
         body: pages[pageIndex],

@@ -42,7 +42,7 @@ class MyButton extends StatelessWidget {
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(icon, color: foregroudColor),
+                  Icon(icon, color: foregroudColor, size: 20),
                   const SizedBox(width: 10),
                   Text(
                     btnText,
