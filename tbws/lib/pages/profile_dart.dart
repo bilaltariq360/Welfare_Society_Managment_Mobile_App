@@ -15,96 +15,109 @@ class Profile extends StatelessWidget {
     var provider =
         Provider.of<UserProvider>(context, listen: false).userDetails!;
     return SingleChildScrollView(
-      child: SizedBox(
-        child: Stack(
-          children: [
-            Image.asset('lib/images/clipboard.png', width: 800),
-            Padding(
-              padding: const EdgeInsets.only(top: 50, left: 25),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      const Icon(Icons.person),
-                      const SizedBox(width: 10),
-                      Text(
-                        provider.userName,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    children: [
-                      const Icon(CupertinoIcons.doc_text_viewfinder),
-                      const SizedBox(width: 10),
-                      Text(
-                        provider.userCNIC,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    children: [
-                      const Icon(CupertinoIcons.phone_fill),
-                      const SizedBox(width: 10),
-                      Text(
-                        provider.userMobile,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    children: [
-                      const Icon(Icons.add_road),
-                      const SizedBox(width: 10),
-                      Text(
-                        '${provider.userStreet} street',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    children: [
-                      const Icon(CupertinoIcons.number),
-                      const SizedBox(width: 10),
-                      Text(
-                        'House No. ${provider.userHouseNo}',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    children: [
-                      const Icon(CupertinoIcons
-                          .rectangle_arrow_up_right_arrow_down_left),
-                      const SizedBox(width: 10),
-                      Text(
-                        provider.houseArea,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    children: [
-                      const Icon(CupertinoIcons.house),
-                      const SizedBox(width: 10),
-                      Text(
-                        provider.userHouseProperty,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ],
-                  ),
-                ],
+      child: Column(
+        children: [
+          const SizedBox(height: 80),
+          Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              Image.asset('lib/images/clipboard.png'),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: 50, left: MediaQuery.of(context).size.width * 0.2),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.person),
+                        const SizedBox(width: 10),
+                        Text(
+                          provider.userName,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      children: [
+                        const Icon(CupertinoIcons.doc_text_viewfinder),
+                        const SizedBox(width: 10),
+                        Text(
+                          provider.userCNIC,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      children: [
+                        const Icon(CupertinoIcons.phone_fill),
+                        const SizedBox(width: 10),
+                        Text(
+                          provider.userMobile,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      children: [
+                        const Icon(Icons.add_road),
+                        const SizedBox(width: 10),
+                        Text(
+                          '${provider.userStreet} street',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      children: [
+                        const Icon(CupertinoIcons.number),
+                        const SizedBox(width: 10),
+                        Text(
+                          'House No. ${provider.userHouseNo}',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      children: [
+                        const Icon(CupertinoIcons
+                            .rectangle_arrow_up_right_arrow_down_left),
+                        const SizedBox(width: 10),
+                        Text(
+                          provider.houseArea,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      children: [
+                        const Icon(CupertinoIcons.house),
+                        const SizedBox(width: 10),
+                        Text(
+                          provider.userHouseProperty,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+          const SizedBox(height: 100),
+          MyButton(
+              btnText: 'Logout',
+              backgroudColor: Style.themeLight,
+              foregroudColor: Colors.black,
+              onTap: () {
+                Navigator.pushReplacementNamed(context, LoginPage.routeName);
+              }),
+        ],
       ),
     );
   }

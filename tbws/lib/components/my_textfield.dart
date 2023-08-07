@@ -93,7 +93,7 @@ class _MyTextFieldState extends State<MyTextField> {
               },
         controller: widget.controller,
         obscureText: widget.obscureText,
-        maxLength: widget.maxLength,
+        maxLength: (widget.hideCheckMark) ? 50 : widget.maxLength,
         decoration: InputDecoration(
           counterText: '',
           enabledBorder: const OutlineInputBorder(
