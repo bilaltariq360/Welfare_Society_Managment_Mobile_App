@@ -279,6 +279,7 @@ class _CollectFundState extends State<CollectFund> {
                                     .then((_) {
                                   setState(() {
                                     fundCollected = false;
+                                    memberFound = false;
                                   });
                                 });
                               });

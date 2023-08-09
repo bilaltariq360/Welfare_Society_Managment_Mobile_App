@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:tbws/components/dropdown.dart';
 import 'package:tbws/components/my_autocomplete.dart';
@@ -183,6 +184,21 @@ class _LoginPageState extends State<LoginPage> {
       errMsg = '';
       widget.loading = true;
     });
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult != ConnectivityResult.wifi &&
+        connectivityResult != ConnectivityResult.mobile &&
+        connectivityResult != ConnectivityResult.ethernet) {
+      setState(() {
+        errMsg = 'No internet connection!\nTry agian later';
+      });
+      Future.delayed(const Duration(seconds: 2)).then((_) {
+        setState(() {
+          errMsg = '';
+          widget.loading = false;
+        });
+      });
+      return;
+    }
     bool found = false;
     var url =
         'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/user_registration.json';
