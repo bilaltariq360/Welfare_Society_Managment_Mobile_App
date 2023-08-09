@@ -21,10 +21,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool initialNotificationLoad = false;
+  bool initialReceiptsLoad = false;
+
   int pageIndex = 0;
 
   List<Widget> pages = [
-    const MyRecord(),
+    MyRecord(),
     Notifications(),
     CollectFund(),
     CollectFund(),
@@ -38,6 +40,11 @@ class _HomeState extends State<Home> {
       Provider.of<UserProvider>(context, listen: false).clearNotifications();
       Provider.of<UserProvider>(context, listen: false).loadNotifications();
       initialNotificationLoad = true;
+    }
+    if (!initialReceiptsLoad) {
+      Provider.of<UserProvider>(context, listen: false).clearReceipts();
+      Provider.of<UserProvider>(context, listen: false).loadReceipts();
+      initialReceiptsLoad = true;
     }
 
     return SafeArea(

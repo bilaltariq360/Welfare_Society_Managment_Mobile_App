@@ -1,16 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tbws/components/receipt.dart';
 import 'package:tbws/providers/user_provider.dart';
 
 class MyRecord extends StatelessWidget {
-  const MyRecord({super.key});
+  MyRecord({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<UserProvider>(context).userDetails!;
+    var provider = Provider.of<UserProvider>(context);
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: Column(
         children: [
           SizedBox(height: 15),
@@ -33,17 +34,20 @@ class MyRecord extends StatelessWidget {
             ],
           ),
           SizedBox(height: 15),
-          Receipt(
-              receipt: '00000001',
-              amount: '10,000',
-              cnic: provider.userCNIC,
-              collector: provider.userName,
-              date: '20, Sep, 2023',
-              house:
-                  'House ${provider.userHouseNo}, ${provider.userStreet} Street',
-              mobile: provider.userMobile,
-              name: provider.userName,
-              property: '${provider.houseArea}, ${provider.userHouseProperty}'),
+          ...provider.receiptData.map((receipt) {
+            return Receipt(
+                receipt: '00000001',
+                amount: receipt.amount,
+                cnic: provider.userDetails!.userCNIC,
+                collector: receipt.collector,
+                date: DateFormat.yMMMEd().format(receipt.date),
+                house:
+                    'House ${provider.userDetails!.userHouseNo}, ${provider.userDetails!.userStreet} Street',
+                mobile: provider.userDetails!.userMobile,
+                name: provider.userDetails!.userName,
+                property:
+                    '${provider.userDetails!.houseArea}, ${provider.userDetails!.userHouseProperty}');
+          })
         ],
       ),
     );
