@@ -100,7 +100,7 @@ class MyRecord extends StatelessWidget {
                     const SizedBox(height: 15),
                     ...provider.receiptData.map((receipt) {
                       return Receipt(
-                          receipt: '00000001',
+                          receipt: receipt.receiptNumber,
                           amount: receipt.amount,
                           cnic: provider.userDetails!.userCNIC,
                           collector: receipt.collector,

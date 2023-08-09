@@ -277,38 +277,60 @@ class _CollectFundState extends State<CollectFund> {
                                 )
                               : MyButton(
                                   btnText: 'Collect',
-                                  onTap: () {
+                                  onTap: () async {
+                                    int receiptNumber = -1;
                                     setState(() {
                                       collectLoading = true;
                                     });
-                                    var url =
-                                        'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/$mobile.json';
 
-                                    http
-                                        .post(Uri.parse(url),
-                                            body: json.encode({
-                                              'Date': DateTime.now().toString(),
-                                              'Collector': provider
-                                                  .userDetails!.userName,
-                                              'Amount': amountController.text,
-                                            }))
-                                        .then((value) {
-                                      amountController.clear();
-                                      Provider.of<UserProvider>(context,
-                                              listen: false)
-                                          .clearReceipts();
-                                      Provider.of<UserProvider>(context,
-                                              listen: false)
-                                          .loadReceipts();
-                                      setState(() {
-                                        collectLoading = false;
-                                        fundCollected = true;
-                                      });
-                                      Future.delayed(const Duration(seconds: 2))
+                                    var url =
+                                        'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/setting.json';
+                                    http.get(Uri.parse(url)).then((response) {
+                                      receiptNumber = int.parse(json.decode(
+                                          response.body)['Receipt Number']);
+                                      receiptNumber += 1;
+                                    }).then((_) {
+                                      url =
+                                          'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/$mobile.json';
+                                      http
+                                          .post(Uri.parse(url),
+                                              body: json.encode({
+                                                'Date':
+                                                    DateTime.now().toString(),
+                                                'Collector': provider
+                                                    .userDetails!.userName,
+                                                'Amount': amountController.text,
+                                                'Receipt Number':
+                                                    receiptNumber.toString(),
+                                              }))
                                           .then((_) {
+                                        url =
+                                            'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/setting.json';
+
+                                        http.patch(Uri.parse(url),
+                                            body: json.encode({
+                                              'Receipt Number':
+                                                  receiptNumber.toString(),
+                                            }));
+                                      }).then((value) {
+                                        amountController.clear();
+                                        Provider.of<UserProvider>(context,
+                                                listen: false)
+                                            .clearReceipts();
+                                        Provider.of<UserProvider>(context,
+                                                listen: false)
+                                            .loadReceipts();
                                         setState(() {
-                                          fundCollected = false;
-                                          memberFound = false;
+                                          collectLoading = false;
+                                          fundCollected = true;
+                                        });
+                                        Future.delayed(
+                                                const Duration(seconds: 2))
+                                            .then((_) {
+                                          setState(() {
+                                            fundCollected = false;
+                                            memberFound = false;
+                                          });
                                         });
                                       });
                                     });

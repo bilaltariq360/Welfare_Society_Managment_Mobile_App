@@ -15,12 +15,16 @@ class Noti {
 }
 
 class ReceiptData {
+  final String receiptNumber;
   final String collector;
   final DateTime date;
   final String amount;
 
   ReceiptData(
-      {required this.collector, required this.amount, required this.date});
+      {required this.collector,
+      required this.amount,
+      required this.date,
+      required this.receiptNumber});
 }
 
 class UserProvider extends ChangeNotifier {
@@ -77,17 +81,18 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<void> loadReceipts() async {
+    String receiptNumber = '-1';
     loading = true;
     notifyListeners();
     var url =
         'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${userDetails!.userMobile}.json';
-
     http.get(Uri.parse(url)).then((response) {
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       extractedData.forEach((fireBaseId, receipt) {
         receiptData.insert(
             0,
             ReceiptData(
+                receiptNumber: receipt['Receipt Number'],
                 collector: receipt['Collector'],
                 amount: receipt['Amount'],
                 date: DateTime.parse(receipt['Date'])));
