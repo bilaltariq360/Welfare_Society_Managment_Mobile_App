@@ -2,13 +2,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Receipt extends StatelessWidget {
-  String receipt, collector, amount, date, cnic, name, mobile, house, property;
+  String receipt,
+      collector,
+      amount,
+      date,
+      time,
+      cnic,
+      name,
+      mobile,
+      house,
+      property;
   Receipt(
       {required this.receipt,
       required this.amount,
       required this.cnic,
       required this.collector,
       required this.date,
+      required this.time,
       required this.house,
       required this.mobile,
       required this.name,
@@ -28,14 +38,14 @@ class Receipt extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(
+                    const Text(
                       'Receipt: ',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                     Text(
                       receipt,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
                           letterSpacing: 1.5),
@@ -44,21 +54,21 @@ class Receipt extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Text(
+                    const Text(
                       'Collector: ',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                     Text(
                       collector,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Divider(
                   color: Colors.grey.shade500,
                   thickness: 1.5,
@@ -86,23 +96,34 @@ class Receipt extends StatelessWidget {
                   color: Colors.grey.shade500,
                   thickness: 1.5,
                 ),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
                       date,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 2),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      time,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 10),
                 Row(
                   children: [
-                    Icon(CupertinoIcons.doc_text_viewfinder, size: 20),
-                    SizedBox(width: 10),
+                    const Icon(CupertinoIcons.doc_text_viewfinder, size: 20),
+                    const SizedBox(width: 10),
                     Text(
                       cnic,
-                      style: TextStyle(fontSize: 14),
+                      style: const TextStyle(fontSize: 14),
                     )
                   ],
                 ),
@@ -112,11 +133,11 @@ class Receipt extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Icon(Icons.person_2_outlined, size: 20),
-                    SizedBox(width: 10),
+                    const Icon(Icons.person_2_outlined, size: 20),
+                    const SizedBox(width: 10),
                     Text(
                       name,
-                      style: TextStyle(fontSize: 14),
+                      style: const TextStyle(fontSize: 14),
                     )
                   ],
                 ),
@@ -126,11 +147,11 @@ class Receipt extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Icon(CupertinoIcons.phone, size: 20),
-                    SizedBox(width: 10),
+                    const Icon(CupertinoIcons.phone, size: 20),
+                    const SizedBox(width: 10),
                     Text(
                       mobile,
-                      style: TextStyle(fontSize: 14),
+                      style: const TextStyle(fontSize: 14),
                     )
                   ],
                 ),
@@ -140,11 +161,11 @@ class Receipt extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Icon(CupertinoIcons.house, size: 20),
-                    SizedBox(width: 10),
+                    const Icon(CupertinoIcons.house, size: 20),
+                    const SizedBox(width: 10),
                     Text(
                       house,
-                      style: TextStyle(fontSize: 14),
+                      style: const TextStyle(fontSize: 14),
                     )
                   ],
                 ),
@@ -154,11 +175,11 @@ class Receipt extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Icon(CupertinoIcons.doc_person, size: 20),
-                    SizedBox(width: 10),
+                    const Icon(CupertinoIcons.doc_person, size: 20),
+                    const SizedBox(width: 10),
                     Text(
                       property,
-                      style: TextStyle(fontSize: 14),
+                      style: const TextStyle(fontSize: 14),
                     )
                   ],
                 ),

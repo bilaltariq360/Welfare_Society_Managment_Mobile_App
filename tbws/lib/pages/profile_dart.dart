@@ -33,7 +33,7 @@ class Profile extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           provider.userName,
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
@@ -44,7 +44,7 @@ class Profile extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           provider.userCNIC,
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
@@ -55,7 +55,7 @@ class Profile extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           provider.userMobile,
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
@@ -66,7 +66,7 @@ class Profile extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           '${provider.userStreet} street',
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
@@ -77,7 +77,7 @@ class Profile extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           'House No. ${provider.userHouseNo}',
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
@@ -89,7 +89,7 @@ class Profile extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           provider.houseArea,
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
@@ -100,7 +100,7 @@ class Profile extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           provider.userHouseProperty,
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),

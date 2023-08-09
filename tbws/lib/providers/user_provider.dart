@@ -26,6 +26,7 @@ class UserProvider extends ChangeNotifier {
   User? userDetails;
   List<Noti> notifications = [];
   List<ReceiptData> receiptData = [];
+  bool loading = false;
 
   void setUserDetail(
       String userCNIC,
@@ -50,6 +51,8 @@ class UserProvider extends ChangeNotifier {
   }
 
   void loadNotifications() {
+    loading = true;
+    notifyListeners();
     var url =
         'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/notifications.json';
 
@@ -63,6 +66,7 @@ class UserProvider extends ChangeNotifier {
                 date: DateTime.parse(noti['Date']),
                 message: noti['Message']));
       });
+      loading = false;
       notifyListeners();
     });
   }
@@ -71,7 +75,9 @@ class UserProvider extends ChangeNotifier {
     notifications.clear();
   }
 
-  void loadReceipts() {
+  Future<void> loadReceipts() async {
+    loading = true;
+    notifyListeners();
     var url =
         'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${userDetails!.userMobile}.json';
 
@@ -85,6 +91,7 @@ class UserProvider extends ChangeNotifier {
                 amount: receipt['Amount'],
                 date: DateTime.parse(receipt['Date'])));
       });
+      loading = false;
       notifyListeners();
     });
   }
