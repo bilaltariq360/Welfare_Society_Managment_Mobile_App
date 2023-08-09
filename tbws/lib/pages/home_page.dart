@@ -35,7 +35,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<UserProvider>(context, listen: false);
+    var provider = Provider.of<UserProvider>(context);
     if (!initialNotificationLoad) {
       Provider.of<UserProvider>(context, listen: false).clearNotifications();
       Provider.of<UserProvider>(context, listen: false).loadNotifications();
@@ -49,7 +49,9 @@ class _HomeState extends State<Home> {
 
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: (provider.userDetails!.isAdmin && pageIndex == 1)
+        floatingActionButton: (provider.connected &&
+                provider.userDetails!.isAdmin &&
+                pageIndex == 1)
             ? FloatingActionButton(
                 onPressed: () {
                   Functions.sendNotification(context);

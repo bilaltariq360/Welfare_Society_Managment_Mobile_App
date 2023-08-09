@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,86 +13,108 @@ class MyRecord extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<UserProvider>(context);
-    return (provider.loading)
-        ? Center(
+    provider.checkConnection();
+    return (!provider.connected)
+        ? const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircularProgressIndicator(color: Style.themeLight),
-                const SizedBox(height: 25),
-                const Text(
-                  'Loading...',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                Icon(
+                  CupertinoIcons.wifi_slash,
+                  color: Colors.grey,
+                  size: 100,
                 ),
+                SizedBox(height: 25),
+                Text(
+                  'No internet connection!',
+                  style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                )
               ],
             ),
           )
-        : SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                const SizedBox(height: 15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        : (provider.loading)
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(
-                      child: Row(
-                        children: [
-                          SizedBox(width: 15),
-                          Icon(
-                            Icons.receipt_long,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            'My Records',
-                            style: TextStyle(
-                                fontSize: 25,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      child: Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              provider.clearReceipts();
-                              provider.loadReceipts();
-                            },
-                            icon: const Icon(CupertinoIcons.refresh),
-                            color: Colors.white,
-                          ),
-                          const SizedBox(width: 15),
-                        ],
-                      ),
+                    CircularProgressIndicator(color: Style.themeLight),
+                    const SizedBox(height: 25),
+                    const Text(
+                      'Loading...',
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                     ),
                   ],
                 ),
-                const SizedBox(height: 15),
-                ...provider.receiptData.map((receipt) {
-                  return Receipt(
-                      receipt: '00000001',
-                      amount: receipt.amount,
-                      cnic: provider.userDetails!.userCNIC,
-                      collector: receipt.collector,
-                      date: DateFormat.yMMMEd().format(receipt.date),
-                      time: DateFormat.jms().format(receipt.date),
-                      house:
-                          'House ${provider.userDetails!.userHouseNo}, ${provider.userDetails!.userStreet} Street',
-                      mobile: provider.userDetails!.userMobile,
-                      name: provider.userDetails!.userName,
-                      property:
-                          '${provider.userDetails!.houseArea}, ${provider.userDetails!.userHouseProperty}');
-                })
-              ],
-            ),
-          );
+              )
+            : SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const SizedBox(
+                          child: Row(
+                            children: [
+                              SizedBox(width: 15),
+                              Icon(
+                                Icons.receipt_long,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                'My Records',
+                                style: TextStyle(
+                                    fontSize: 25,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          child: Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  provider.clearReceipts();
+                                  provider.loadReceipts();
+                                },
+                                icon: const Icon(CupertinoIcons.refresh),
+                                color: Colors.white,
+                              ),
+                              const SizedBox(width: 15),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    ...provider.receiptData.map((receipt) {
+                      return Receipt(
+                          receipt: '00000001',
+                          amount: receipt.amount,
+                          cnic: provider.userDetails!.userCNIC,
+                          collector: receipt.collector,
+                          date: DateFormat.yMMMEd().format(receipt.date),
+                          time: DateFormat.jms().format(receipt.date),
+                          house:
+                              'House ${provider.userDetails!.userHouseNo}, ${provider.userDetails!.userStreet} Street',
+                          mobile: provider.userDetails!.userMobile,
+                          name: provider.userDetails!.userName,
+                          property:
+                              '${provider.userDetails!.houseArea}, ${provider.userDetails!.userHouseProperty}');
+                    })
+                  ],
+                ),
+              );
   }
 }

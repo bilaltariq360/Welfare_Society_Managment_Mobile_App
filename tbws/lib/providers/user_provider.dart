@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -98,5 +99,19 @@ class UserProvider extends ChangeNotifier {
 
   void clearReceipts() {
     receiptData.clear();
+  }
+
+  bool connected = false;
+
+  Future<void> checkConnection() async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult != ConnectivityResult.wifi &&
+        connectivityResult != ConnectivityResult.mobile &&
+        connectivityResult != ConnectivityResult.ethernet) {
+      connected = false;
+    } else {
+      connected = true;
+    }
+    notifyListeners();
   }
 }

@@ -73,25 +73,30 @@ class Functions extends StatelessWidget {
                     ],
                   ),
                   onPressed: () {
-                    var url =
-                        'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/notifications.json';
-                    http
-                        .post(Uri.parse(url),
-                            body: json.encode({
-                              'Sender': Provider.of<UserProvider>(context,
-                                      listen: false)
-                                  .userDetails!
-                                  .userName,
-                              'Date': DateTime.now().toString(),
-                              'Message': controller.text,
-                            }))
-                        .then((value) {
+                    if (Provider.of<UserProvider>(context, listen: false)
+                        .connected) {
+                      var url =
+                          'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/notifications.json';
+                      http
+                          .post(Uri.parse(url),
+                              body: json.encode({
+                                'Sender': Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .userDetails!
+                                    .userName,
+                                'Date': DateTime.now().toString(),
+                                'Message': controller.text,
+                              }))
+                          .then((value) {
+                        Navigator.of(context).pop();
+                        Provider.of<UserProvider>(context, listen: false)
+                            .clearNotifications();
+                        Provider.of<UserProvider>(context, listen: false)
+                            .loadNotifications();
+                      });
+                    } else {
                       Navigator.of(context).pop();
-                      Provider.of<UserProvider>(context, listen: false)
-                          .clearNotifications();
-                      Provider.of<UserProvider>(context, listen: false)
-                          .loadNotifications();
-                    });
+                    }
                   },
                 ),
               ],
