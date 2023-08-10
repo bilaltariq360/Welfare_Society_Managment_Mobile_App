@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tbws/pages/my_records_page.dart';
 
 import '../pages/login_page.dart';
 
@@ -69,6 +70,10 @@ class _MyDropdownState extends State<MyDropdown> {
               } else if (widget.hintText == 'Select House Property') {
                 LoginPage.housePropertySelected = true;
                 LoginPage.housePropertyController = val;
+              } else if (widget.hintText == 'Filter Month') {
+                setState(() {
+                  MyRecord.receiptMonth = val;
+                });
               }
             },
           );
