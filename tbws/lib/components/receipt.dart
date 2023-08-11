@@ -187,6 +187,25 @@ class Receipt extends StatelessWidget {
                   color: Colors.grey.shade300,
                   thickness: 1.5,
                 ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Icon(
+                      Icons.copyright,
+                      size: 14,
+                      color: Colors.grey.shade400,
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      '2023 Taj Bagh Welfare Society (Reg.)',
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade400,
+                          fontWeight: FontWeight.w500),
+                    )
+                  ],
+                ),
               ],
             ),
           ),

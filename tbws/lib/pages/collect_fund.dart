@@ -344,12 +344,21 @@ class _CollectFundState extends State<CollectFund> {
                       )
                     : (errMessage.isNotEmpty)
                         ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const SizedBox(height: 50),
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.15),
+                              const Icon(
+                                CupertinoIcons.doc_text_search,
+                                color: Colors.grey,
+                                size: 100,
+                              ),
+                              const SizedBox(height: 30),
                               Text(
                                 errMessage,
                                 style: const TextStyle(
-                                    fontSize: 25, color: Colors.grey),
+                                    color: Colors.grey, fontSize: 25),
                               ),
                             ],
                           )

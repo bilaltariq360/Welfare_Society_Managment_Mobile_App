@@ -8,27 +8,23 @@ import 'package:tbws/components/receipt.dart';
 import 'package:tbws/providers/user_provider.dart';
 import 'package:tbws/style.dart';
 
-class MyRecord extends StatefulWidget {
-  MyRecord({super.key});
-
-  static String receiptMonth = 'All Records';
+class DefaultMember extends StatefulWidget {
+  DefaultMember({super.key});
 
   @override
-  State<MyRecord> createState() => _MyRecordState();
+  State<DefaultMember> createState() => _DefaultMemberState();
 }
 
-class _MyRecordState extends State<MyRecord> {
-  List<String> filterMonth = ['All Records'];
-
+class _DefaultMemberState extends State<DefaultMember> {
+  List<String> monthList = [];
   @override
   void initState() {
     super.initState();
-    DateTime currentDate = DateTime.now();
-    DateTime startDate = DateTime(2023, 1); // Starting from August 2023
+    DateTime startDate = DateTime.now();
 
-    while (startDate.isBefore(currentDate)) {
+    while (DateTime(2023, 8).isBefore(startDate)) {
       String formattedDate = DateFormat.yMMM().format(startDate);
-      filterMonth.insert(1, formattedDate);
+      monthList.add(formattedDate);
       startDate = DateTime(startDate.year, startDate.month + 1);
     }
   }
@@ -36,15 +32,6 @@ class _MyRecordState extends State<MyRecord> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<UserProvider>(context);
-    List<ReceiptData> receipts = [];
-    if (MyRecord.receiptMonth == 'All Records') {
-      receipts = provider.receiptData;
-    } else {
-      receipts = provider.receiptData
-          .where((receipt) =>
-              DateFormat.yMMM().format(receipt.date) == MyRecord.receiptMonth)
-          .toList();
-    }
 
     provider.checkConnection();
     return (!provider.connected)
@@ -133,9 +120,9 @@ class _MyRecordState extends State<MyRecord> {
                     const SizedBox(height: 15),
                     MyDropdown(
                         hintText: 'All Records',
-                        list: filterMonth,
+                        list: [],
                         prefixIcon: CupertinoIcons.calendar_today),
-                    (receipts.isEmpty)
+                    (true)
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -156,7 +143,7 @@ class _MyRecordState extends State<MyRecord> {
                             ],
                           )
                         : const SizedBox(height: 15),
-                    ...receipts.map((receipt) {
+                    /*...receipts.map((receipt) {
                       return Receipt(
                           receipt: receipt.receiptNumber,
                           amount: receipt.amount,
@@ -170,7 +157,7 @@ class _MyRecordState extends State<MyRecord> {
                           name: provider.userDetails!.userName,
                           property:
                               '${provider.userDetails!.houseArea}, ${provider.userDetails!.userHouseProperty}');
-                    })
+                    })*/
                   ],
                 ),
               );

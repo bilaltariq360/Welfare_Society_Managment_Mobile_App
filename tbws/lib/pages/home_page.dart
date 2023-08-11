@@ -5,6 +5,7 @@ import 'package:tbws/pages/collect_fund.dart';
 import 'package:tbws/pages/my_records_page.dart';
 import 'package:tbws/pages/notifications_page.dart';
 import 'package:tbws/pages/profile_dart.dart';
+import 'package:tbws/pages/default_member.dart';
 
 import '../components/functions.dart';
 import '../providers/user_provider.dart';
@@ -27,9 +28,9 @@ class _HomeState extends State<Home> {
 
   List<Widget> pages = [
     MyRecord(),
-    Notifications(),
+    const Notifications(),
     CollectFund(),
-    CollectFund(),
+    DefaultMember(),
     Profile(),
   ];
 
@@ -95,10 +96,11 @@ class _HomeState extends State<Home> {
                     icon: Icons.confirmation_num_outlined,
                     text: 'Collect Fund',
                   ),
-                const GButton(
-                  icon: Icons.feedback_outlined,
-                  text: 'Complaints',
-                ),
+                if (provider.userDetails!.isAdmin)
+                  const GButton(
+                    icon: Icons.disabled_by_default_rounded,
+                    text: 'Default Members',
+                  ),
                 const GButton(
                   icon: Icons.face_outlined,
                   text: 'Profile',

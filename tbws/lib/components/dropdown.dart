@@ -70,7 +70,7 @@ class _MyDropdownState extends State<MyDropdown> {
               } else if (widget.hintText == 'Select House Property') {
                 LoginPage.housePropertySelected = true;
                 LoginPage.housePropertyController = val;
-              } else if (widget.hintText == 'Filter Month') {
+              } else if (widget.hintText == 'All Records') {
                 setState(() {
                   MyRecord.receiptMonth = val;
                 });
