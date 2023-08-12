@@ -1,14 +1,13 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:taj_bagh_welfare_society/components/dropdown.dart';
-import 'package:taj_bagh_welfare_society/components/my_button.dart';
-import 'package:taj_bagh_welfare_society/components/receipt.dart';
 import 'package:taj_bagh_welfare_society/providers/user_provider.dart';
 import 'package:taj_bagh_welfare_society/style.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import '../components/my_textfield.dart';
 import 'my_records_page.dart';
@@ -23,6 +22,9 @@ class DefaultMember extends StatefulWidget {
 class _DefaultMemberState extends State<DefaultMember> {
   List<String> filterMonth = ['All Records'];
 
+  int membersFoundIndex = 0;
+  List<List<List<String>>> members = [];
+
   TextEditingController userController = TextEditingController();
 
   @override
@@ -36,6 +38,56 @@ class _DefaultMemberState extends State<DefaultMember> {
       filterMonth.insert(1, formattedDate);
       startDate = DateTime(startDate.year, startDate.month + 1);
     }
+
+    var url =
+        'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/user_registration.json';
+
+    http.get(Uri.parse(url)).then((response) {
+      if (response.statusCode == 200) {}
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      extractedData.forEach((fireBaseId, userData) {
+        members.add([
+          userData['CNIC'],
+          userData['Full Name'],
+          userData['Mobile'],
+          userData['Street'],
+          userData['House Area'],
+          userData['House Property'],
+          userData['House No']
+        ]);
+      });
+    }).then((response) {
+      for (var i = 0; i < members.length; i++) {
+        List<String> temp = [];
+        int code = 0;
+        url =
+            'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${members[i][3]}-${members[i][6]}.json';
+
+        http.get(Uri.parse(url)).then((response) {
+          if (response.statusCode == 200) {
+            code = response.statusCode;
+            temp = filterMonth;
+          } else {
+            final extractedData =
+                json.decode(response.body) as Map<String, dynamic>;
+            extractedData.forEach((fireBaseId, userData) {
+              temp.add(
+                  DateFormat.yMMM().format(DateTime.parse(userData['Date'])));
+            });
+          }
+        }).then((value) {
+          if (code == 200) {
+            members[i].add(temp);
+            code = 0;
+          } else {
+            for (var month in filterMonth) {
+              temp.removeWhere((m) => m == month);
+            }
+            members[i].add(temp);
+          }
+        });
+      }
+    });
   }
 
   @override
@@ -153,51 +205,163 @@ class _DefaultMemberState extends State<DefaultMember> {
                                 color: Style.themeLight,
                                 borderRadius: BorderRadius.circular(5)),
                             child: IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.search,
-                                  color: Style.themeDark,
-                                )),
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.search,
+                                color: Style.themeDark,
+                              ),
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    (receipts.isEmpty)
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.2),
-                              Icon(
-                                CupertinoIcons.doc_text_search,
-                                color: Style.themeFade,
-                                size: 100,
+                    Column(
+                      children: [
+                        const SizedBox(height: 50),
+                        Text(
+                          'Members found: $membersFoundIndex',
+                          style: TextStyle(
+                              color: Style.themeLight,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 10),
+                        ...members[0].map((member) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 20),
+                            child: GestureDetector(
+                              child: Container(
+                                padding: const EdgeInsets.all(15),
+                                height: 350,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                    color: Style.themeUltraLight,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          'Member Details',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Style.themeDark),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 30),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.person,
+                                            color: Style.themeDark),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          member[1],
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Style.themeDark),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 15),
+                                    Row(
+                                      children: [
+                                        Icon(CupertinoIcons.doc_text_viewfinder,
+                                            color: Style.themeDark),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          member[0],
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Style.themeDark),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 15),
+                                    Row(
+                                      children: [
+                                        Icon(CupertinoIcons.phone_fill,
+                                            color: Style.themeDark),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          member[2],
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Style.themeDark),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 15),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.add_road,
+                                            color: Style.themeDark),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          '${member[3]} street',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Style.themeDark),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 15),
+                                    Row(
+                                      children: [
+                                        Icon(CupertinoIcons.number,
+                                            color: Style.themeDark),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          'House No. ${member[6]}',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Style.themeDark),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 15),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                            CupertinoIcons
+                                                .rectangle_arrow_up_right_arrow_down_left,
+                                            color: Style.themeDark),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          member[4],
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Style.themeDark),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 15),
+                                    Row(
+                                      children: [
+                                        Icon(CupertinoIcons.house,
+                                            color: Style.themeDark),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          member[5],
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Style.themeDark),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                              const SizedBox(height: 30),
-                              Text(
-                                'No record found',
-                                style: TextStyle(
-                                    color: Style.themeFade, fontSize: 25),
-                              ),
-                            ],
-                          )
-                        : const SizedBox(height: 15),
-                    ...receipts.map((receipt) {
-                      return Receipt(
-                          receipt: receipt.receiptNumber,
-                          amount: receipt.amount,
-                          cnic: provider.userDetails!.userCNIC,
-                          collector: receipt.collector,
-                          date: DateFormat.yMMMEd().format(receipt.date),
-                          time: DateFormat.jms().format(receipt.date),
-                          house:
-                              'House ${provider.userDetails!.userHouseNo}, ${provider.userDetails!.userStreet} Street',
-                          mobile: provider.userDetails!.userMobile,
-                          name: provider.userDetails!.userName,
-                          property:
-                              '${provider.userDetails!.houseArea}, ${provider.userDetails!.userHouseProperty}');
-                    })
+                            ),
+                          );
+                        }),
+                      ],
+                    )
                   ],
                 ),
               );
