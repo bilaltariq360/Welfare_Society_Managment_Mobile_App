@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tbws/pages/my_records_page.dart';
+import 'package:tbws/style.dart';
 
 import '../pages/login_page.dart';
 
@@ -22,38 +23,42 @@ class _MyDropdownState extends State<MyDropdown> {
       padding: const EdgeInsets.symmetric(horizontal: 25),
       child: DropdownButtonFormField(
         decoration: InputDecoration(
-          prefixIcon: Icon(widget.prefixIcon, color: Colors.grey[500]),
+          prefixIcon: Icon(widget.prefixIcon, color: Style.themeFade),
           enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.white),
+            borderSide: BorderSide(color: Style.themeUltraLight),
             borderRadius: BorderRadius.circular(5),
           ),
           border: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.white),
+            borderSide: BorderSide(color: Style.themeUltraLight),
             borderRadius: BorderRadius.circular(5),
           ),
           enabled: false,
           disabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.white),
+            borderSide: BorderSide(color: Style.themeUltraLight),
             borderRadius: BorderRadius.circular(5),
           ),
           filled: true,
-          fillColor: Colors.grey.shade200,
+          fillColor: Colors.transparent,
         ),
-        dropdownColor: Colors.grey.shade300,
+        dropdownColor: Style.themeDark,
         hint: _dropDownValue == null
             ? const Text('Dropdown')
             : Text(
                 _dropDownValue,
-                style: TextStyle(color: Colors.grey[500], fontSize: 16),
+                style: TextStyle(color: Style.themeFade, fontSize: 16),
               ),
         isExpanded: true,
         iconSize: 25.0,
-        style: const TextStyle(color: Colors.black),
+        iconDisabledColor: Style.themeFade,
+        iconEnabledColor: Style.themeFade,
         items: widget.list.map(
           (val) {
             return DropdownMenuItem<String>(
               value: val,
-              child: Text(val),
+              child: Text(
+                val,
+                style: TextStyle(color: Style.themeLight),
+              ),
             );
           },
         ).toList(),

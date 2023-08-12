@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:tbws/pages/collect_fund.dart';
+import 'package:tbws/pages/search_member.dart';
 import 'package:tbws/pages/my_records_page.dart';
 import 'package:tbws/pages/notifications_page.dart';
 import 'package:tbws/pages/profile_dart.dart';
@@ -29,7 +29,7 @@ class _HomeState extends State<Home> {
   List<Widget> pages = [
     MyRecord(),
     const Notifications(),
-    CollectFund(),
+    SearchMember(),
     DefaultMember(),
     Profile(),
   ];

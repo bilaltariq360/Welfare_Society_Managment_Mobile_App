@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tbws/style.dart';
 
 import '../pages/login_page.dart';
 
@@ -101,24 +102,26 @@ class _MyAutocompleteState extends State<MyAutocomplete> {
       child: Column(
         children: [
           TextField(
+            style: TextStyle(color: Style.themeLight),
             keyboardType: widget.textInputType,
             inputFormatters: [widget.filteringTextInputFormatter],
             controller: _textEditingController,
             focusNode: _focusNode,
             decoration: InputDecoration(
-              prefixIcon: Icon(widget.prefixIcon, color: Colors.grey[500]),
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white),
+              prefixIcon: Icon(widget.prefixIcon, color: Style.themeFade),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Style.themeUltraLight),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey.shade400),
+                borderSide: BorderSide(color: Style.themeUltraLight),
               ),
-              fillColor: Colors.grey.shade200,
+              fillColor: Colors.transparent,
               filled: true,
               hintText: 'Street',
-              hintStyle: TextStyle(color: Colors.grey[500]),
-              suffixIcon:
-                  (check) ? const Icon(Icons.check, color: Colors.green) : null,
+              hintStyle: TextStyle(color: Style.themeFade),
+              suffixIcon: (check)
+                  ? Icon(Icons.check, color: Style.themeUltraLight)
+                  : null,
             ),
             onChanged: (value) {
               bool found = false;
@@ -168,8 +171,8 @@ class _MyAutocompleteState extends State<MyAutocomplete> {
                         });
                       },
                       child: ListTile(
-                        tileColor: Colors.grey[300],
-                        textColor: Colors.grey[600],
+                        tileColor: Style.themeDark,
+                        textColor: Style.themeLight,
                         title: Text(option),
                       ),
                     );

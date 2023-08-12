@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tbws/pages/collect_fund.dart';
 import 'package:tbws/providers/user_provider.dart';
 import 'pages/login_page.dart';
 
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         routes: {
           LoginPage.routeName: (context) => LoginPage(),
           Home.routeName: (context) => Home(),
+          CollectFund.routeName: (context) => CollectFund(),
         },
       ),
     );

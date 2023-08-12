@@ -35,20 +35,20 @@ class _DefaultMemberState extends State<DefaultMember> {
 
     provider.checkConnection();
     return (!provider.connected)
-        ? const Center(
+        ? Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   CupertinoIcons.wifi_slash,
-                  color: Colors.grey,
+                  color: Style.themeFade,
                   size: 100,
                 ),
-                SizedBox(height: 25),
+                const SizedBox(height: 10),
                 Text(
                   'No internet connection!',
                   style: TextStyle(
-                      color: Colors.grey,
+                      color: Style.themeFade,
                       fontSize: 20,
                       fontWeight: FontWeight.bold),
                 )

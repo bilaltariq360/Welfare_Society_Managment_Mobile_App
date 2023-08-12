@@ -12,6 +12,8 @@ import 'package:tbws/style.dart';
 import '../components/my_textfield.dart';
 
 class CollectFund extends StatefulWidget {
+  static String routeName = '/collect-fund';
+
   CollectFund({super.key});
 
   @override
@@ -19,233 +21,177 @@ class CollectFund extends StatefulWidget {
 }
 
 class _CollectFundState extends State<CollectFund> {
-  TextEditingController userController = TextEditingController();
   TextEditingController amountController = TextEditingController();
 
-  bool memberFound = false;
   bool fundCollected = false;
-  bool searchLoading = false, collectLoading = false;
+  bool collectLoading = false;
   String errMessage = '';
-  String cnic = '',
-      name = '',
-      mobile = '',
-      street = '',
-      houseNo = '',
-      houseArea = '',
-      houseProperty = '';
 
   @override
   Widget build(BuildContext context) {
+    final List<String> args =
+        ModalRoute.of(context)!.settings.arguments as List<String>;
     var provider = Provider.of<UserProvider>(context);
     provider.checkConnection();
-    return (!provider.connected)
-        ? const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  CupertinoIcons.wifi_slash,
-                  color: Colors.grey,
-                  size: 100,
-                ),
-                SizedBox(height: 25),
-                Text(
-                  'No internet connection!',
-                  style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                )
-              ],
-            ),
-          )
-        : SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                (collectLoading)
-                    ? const SizedBox()
-                    : Column(
-                        children: [
-                          const SizedBox(height: 100),
-                          MyTextField(
-                            controller: userController,
-                            hintText: 'Mobile',
-                            obscureText: false,
-                            prefixIcon: CupertinoIcons.phone_fill,
-                            textInputType: TextInputType.number,
-                            filteringTextInputFormatter:
-                                FilteringTextInputFormatter.allow(
-                                    RegExp(r'[0-9]')),
-                            maxLength: 11,
-                            minLength: 11,
-                            exactLength: 11,
-                            check: (userController.text.isNotEmpty &&
-                                    userController.text.length == 11)
-                                ? true
-                                : false,
-                            hideCheckMark: false,
-                          ),
-                          const SizedBox(height: 30),
-                          (searchLoading)
-                              ? CircularProgressIndicator(
-                                  color: Style.themeLight,
-                                )
-                              : MyButton(
-                                  btnText: 'Search Member',
-                                  onTap: () async {
-                                    setState(() {
-                                      errMessage = '';
-                                      memberFound = false;
-                                      searchLoading = true;
-                                    });
-                                    var url =
-                                        'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/user_registration.json';
-
-                                    http.get(Uri.parse(url)).then((response) {
-                                      final extractedData =
-                                          json.decode(response.body)
-                                              as Map<String, dynamic>;
-                                      extractedData
-                                          .forEach((fireBaseId, userData) {
-                                        if (userData['Mobile'] ==
-                                            userController.text) {
-                                          cnic = userData['CNIC'];
-                                          name = userData['Full Name'];
-                                          mobile = userData['Mobile'];
-                                          street = userData['Street'];
-                                          houseArea = userData['House Area'];
-                                          houseProperty =
-                                              userData['House Property'];
-                                          houseNo = userData['House No'];
-                                          setState(() {
-                                            memberFound = true;
-                                          });
-                                        }
-                                      });
-                                    }).then((value) {
-                                      userController.clear();
-                                      setState(() {
-                                        searchLoading = false;
-                                        if (!memberFound) {
-                                          errMessage = 'No record found!';
-                                        }
-                                      });
-                                    });
-                                  },
-                                  backgroudColor: Style.themeLight,
-                                  foregroudColor: Colors.black,
-                                  icon: Icons.search,
-                                ),
-                        ],
-                      ),
-                (memberFound && !fundCollected)
-                    ? Column(
-                        children: [
-                          const SizedBox(height: 50),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: GestureDetector(
-                              onTap: () {},
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Style.themeDark,
+        elevation: 0,
+      ),
+      backgroundColor: Style.themeDark,
+      body: (!provider.connected)
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    CupertinoIcons.wifi_slash,
+                    color: Style.themeFade,
+                    size: 100,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'No internet connection!',
+                    style: TextStyle(
+                        color: Style.themeFade,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+            )
+          : SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  (!fundCollected)
+                      ? Column(
+                          children: [
+                            const SizedBox(height: 50),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
                               child: Container(
                                 padding: const EdgeInsets.all(15),
                                 height: 350,
                                 width: double.infinity,
                                 decoration: BoxDecoration(
-                                    color: Colors.grey.shade200,
+                                    color: Style.themeUltraLight,
                                     borderRadius: BorderRadius.circular(10)),
                                 child: Column(
                                   children: [
-                                    const Row(
+                                    Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        SizedBox(width: 10),
+                                        const SizedBox(width: 10),
                                         Text(
                                           'Member Details',
                                           style: TextStyle(
                                               fontSize: 20,
-                                              fontWeight: FontWeight.bold),
+                                              fontWeight: FontWeight.bold,
+                                              color: Style.themeDark),
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: 30),
                                     Row(
                                       children: [
-                                        const Icon(Icons.person),
+                                        Icon(Icons.person,
+                                            color: Style.themeDark),
                                         const SizedBox(width: 10),
                                         Text(
-                                          name,
-                                          style: TextStyle(fontSize: 16),
+                                          args[1],
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Style.themeDark),
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: 15),
                                     Row(
                                       children: [
-                                        const Icon(
-                                            CupertinoIcons.doc_text_viewfinder),
+                                        Icon(CupertinoIcons.doc_text_viewfinder,
+                                            color: Style.themeDark),
                                         const SizedBox(width: 10),
                                         Text(
-                                          cnic,
-                                          style: TextStyle(fontSize: 16),
+                                          args[0],
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Style.themeDark),
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: 15),
                                     Row(
                                       children: [
-                                        const Icon(CupertinoIcons.phone_fill),
+                                        Icon(CupertinoIcons.phone_fill,
+                                            color: Style.themeDark),
                                         const SizedBox(width: 10),
                                         Text(
-                                          mobile,
-                                          style: TextStyle(fontSize: 16),
+                                          args[2],
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Style.themeDark),
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: 15),
                                     Row(
                                       children: [
-                                        const Icon(Icons.add_road),
+                                        Icon(Icons.add_road,
+                                            color: Style.themeDark),
                                         const SizedBox(width: 10),
                                         Text(
-                                          '$street street',
-                                          style: TextStyle(fontSize: 16),
+                                          '${args[3]} street',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Style.themeDark),
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: 15),
                                     Row(
                                       children: [
-                                        const Icon(CupertinoIcons.number),
+                                        Icon(CupertinoIcons.number,
+                                            color: Style.themeDark),
                                         const SizedBox(width: 10),
                                         Text(
-                                          'House No. $houseNo',
-                                          style: TextStyle(fontSize: 16),
+                                          'House No. ${args[6]}',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Style.themeDark),
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: 15),
                                     Row(
                                       children: [
-                                        const Icon(CupertinoIcons
-                                            .rectangle_arrow_up_right_arrow_down_left),
+                                        Icon(
+                                            CupertinoIcons
+                                                .rectangle_arrow_up_right_arrow_down_left,
+                                            color: Style.themeDark),
                                         const SizedBox(width: 10),
                                         Text(
-                                          houseArea,
-                                          style: TextStyle(fontSize: 16),
+                                          args[5],
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Style.themeDark),
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: 15),
                                     Row(
                                       children: [
-                                        const Icon(CupertinoIcons.house),
+                                        Icon(CupertinoIcons.house,
+                                            color: Style.themeDark),
                                         const SizedBox(width: 10),
                                         Text(
-                                          houseProperty,
-                                          style: TextStyle(fontSize: 16),
+                                          args[4],
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Style.themeDark),
                                         ),
                                       ],
                                     ),
@@ -253,133 +199,172 @@ class _CollectFundState extends State<CollectFund> {
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 50),
-                          MyTextField(
-                            controller: amountController,
-                            hintText: 'Amount',
-                            obscureText: false,
-                            prefixIcon: CupertinoIcons.money_dollar,
-                            textInputType: TextInputType.number,
-                            filteringTextInputFormatter:
-                                FilteringTextInputFormatter.allow(
-                                    RegExp(r'[0-9]')),
-                            maxLength: 0,
-                            minLength: 0,
-                            exactLength: 0,
-                            check: false,
-                            hideCheckMark: true,
-                          ),
-                          const SizedBox(height: 30),
-                          (collectLoading)
-                              ? CircularProgressIndicator(
-                                  color: Style.themeLight,
-                                )
-                              : MyButton(
-                                  btnText: 'Collect',
-                                  onTap: () async {
-                                    int receiptNumber = -1;
-                                    setState(() {
-                                      collectLoading = true;
-                                    });
-
-                                    var url =
-                                        'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/setting.json';
-                                    http.get(Uri.parse(url)).then((response) {
-                                      receiptNumber = int.parse(json.decode(
-                                          response.body)['Receipt Number']);
-                                      receiptNumber += 1;
-                                    }).then((_) {
-                                      url =
-                                          'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/$mobile.json';
-                                      http
-                                          .post(Uri.parse(url),
-                                              body: json.encode({
-                                                'Date':
-                                                    DateTime.now().toString(),
-                                                'Collector': provider
-                                                    .userDetails!.userName,
-                                                'Amount': amountController.text,
-                                                'Receipt Number':
-                                                    receiptNumber.toString(),
-                                              }))
-                                          .then((_) {
-                                        url =
-                                            'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/setting.json';
-
-                                        http.patch(Uri.parse(url),
-                                            body: json.encode({
-                                              'Receipt Number':
-                                                  receiptNumber.toString(),
-                                            }));
-                                      }).then((value) {
-                                        amountController.clear();
-                                        Provider.of<UserProvider>(context,
-                                                listen: false)
-                                            .clearReceipts();
-                                        Provider.of<UserProvider>(context,
-                                                listen: false)
-                                            .loadReceipts();
-                                        setState(() {
-                                          collectLoading = false;
-                                          fundCollected = true;
-                                        });
-                                        Future.delayed(
-                                                const Duration(seconds: 2))
-                                            .then((_) {
+                            const SizedBox(height: 50),
+                            MyTextField(
+                              controller: amountController,
+                              hintText: 'Amount',
+                              obscureText: false,
+                              prefixIcon: CupertinoIcons.money_dollar,
+                              textInputType: TextInputType.number,
+                              filteringTextInputFormatter:
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9]')),
+                              maxLength: 0,
+                              minLength: 0,
+                              exactLength: 0,
+                              check: false,
+                              hideCheckMark: true,
+                            ),
+                            const SizedBox(height: 30),
+                            (errMessage.isNotEmpty && !collectLoading)
+                                ? Column(
+                                    children: [
+                                      Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 15, horizontal: 25),
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 25),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            color: Colors.red.shade900),
+                                        child: Text(
+                                          errMessage,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 15),
+                                    ],
+                                  )
+                                : const SizedBox(height: 0),
+                            (collectLoading)
+                                ? CircularProgressIndicator(
+                                    color: Style.themeLight,
+                                  )
+                                : (!collectLoading)
+                                    ? MyButton(
+                                        btnText: 'Collect',
+                                        onTap: () async {
                                           setState(() {
-                                            fundCollected = false;
-                                            memberFound = false;
+                                            errMessage = '';
                                           });
-                                        });
-                                      });
-                                    });
-                                  },
-                                  backgroudColor: Style.themeLight,
-                                  foregroudColor: Colors.black,
-                                  icon: Icons.send,
-                                ),
-                          const SizedBox(height: 100),
-                        ],
-                      )
-                    : (errMessage.isNotEmpty)
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                  height: MediaQuery.of(context).size.height *
-                                      0.15),
-                              const Icon(
-                                CupertinoIcons.doc_text_search,
-                                color: Colors.grey,
-                                size: 100,
-                              ),
-                              const SizedBox(height: 30),
-                              Text(
-                                errMessage,
-                                style: const TextStyle(
-                                    color: Colors.grey, fontSize: 25),
-                              ),
-                            ],
-                          )
-                        : (fundCollected)
-                            ? Column(
+                                          if (amountController.text.isEmpty ||
+                                              amountController.text == ' ' ||
+                                              amountController.text == '  ') {
+                                            setState(() {
+                                              errMessage =
+                                                  'Enter Valid Amount!';
+                                            });
+                                            return;
+                                          }
+                                          int receiptNumber = -1;
+                                          setState(() {
+                                            collectLoading = true;
+                                          });
+
+                                          var url =
+                                              'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/setting.json';
+                                          http
+                                              .get(Uri.parse(url))
+                                              .then((response) {
+                                            receiptNumber = int.parse(
+                                                json.decode(response.body)[
+                                                    'Receipt Number']);
+                                            receiptNumber += 1;
+                                          }).then((_) {
+                                            url =
+                                                'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${args[2]}.json';
+                                            http
+                                                .post(Uri.parse(url),
+                                                    body: json.encode({
+                                                      'Date': DateTime.now()
+                                                          .toString(),
+                                                      'Collector': provider
+                                                          .userDetails!
+                                                          .userName,
+                                                      'Amount':
+                                                          amountController.text,
+                                                      'Receipt Number':
+                                                          receiptNumber
+                                                              .toString(),
+                                                    }))
+                                                .then((_) {
+                                              url =
+                                                  'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/setting.json';
+
+                                              http.patch(Uri.parse(url),
+                                                  body: json.encode({
+                                                    'Receipt Number':
+                                                        receiptNumber
+                                                            .toString(),
+                                                  }));
+                                            }).then((value) {
+                                              amountController.clear();
+                                              Provider.of<UserProvider>(context,
+                                                      listen: false)
+                                                  .clearReceipts();
+                                              Provider.of<UserProvider>(context,
+                                                      listen: false)
+                                                  .loadReceipts();
+                                              setState(() {
+                                                collectLoading = false;
+                                                fundCollected = true;
+                                              });
+                                              Future.delayed(const Duration(
+                                                      seconds: 2))
+                                                  .then((_) {
+                                                setState(() {
+                                                  fundCollected = false;
+                                                });
+                                              });
+                                            });
+                                          });
+                                        },
+                                        backgroudColor: Style.themeLight,
+                                        foregroudColor: Style.themeDark,
+                                        icon: Icons.send,
+                                      )
+                                    : const SizedBox(height: 0),
+                            const SizedBox(height: 100),
+                          ],
+                        )
+                      : (fundCollected)
+                          ? Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const SizedBox(height: 100),
-                                  Icon(Icons.check_circle_outline_outlined,
-                                      color: Colors.green.shade600, size: 150),
+                                  SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.23),
+                                  Icon(
+                                    Icons.check_circle_outline_outlined,
+                                    color: Style.themeLight,
+                                    size: 150,
+                                  ),
                                   const SizedBox(height: 30),
                                   Text(
                                     'Fund collected successfully!',
                                     style: TextStyle(
-                                        color: Colors.green.shade600,
-                                        fontSize: 20),
+                                        fontWeight: FontWeight.bold,
+                                        color: Style.themeLight,
+                                        fontSize:
+                                            MediaQuery.of(context).size.width *
+                                                0.06),
                                   ),
                                 ],
-                              )
-                            : const SizedBox(),
-              ],
+                              ),
+                            )
+                          : const SizedBox(),
+                ],
+              ),
             ),
-          );
+    );
   }
 }

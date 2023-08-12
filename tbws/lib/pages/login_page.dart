@@ -6,6 +6,7 @@ import 'package:tbws/components/my_autocomplete.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:tbws/style.dart';
 import 'dart:convert';
 import '../providers/user_provider.dart';
 import '/components/my_button.dart';
@@ -320,7 +321,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Style.themeDark,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -331,9 +332,10 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
-                const Icon(
+                Icon(
                   Icons.lock,
                   size: 100,
+                  color: Style.themeLight,
                 ),
                 const SizedBox(height: 50),
                 Text(
@@ -341,7 +343,7 @@ class _LoginPageState extends State<LoginPage> {
                       ? 'Welcome back you\'ve been missed!'
                       : 'Get yourself register now!',
                   style: TextStyle(
-                    color: Colors.grey[700],
+                    color: Style.themeFade,
                     fontSize: 16,
                   ),
                 ),
@@ -519,7 +521,7 @@ class _LoginPageState extends State<LoginPage> {
                               children: [
                                 Text(
                                   'Forgot Password?',
-                                  style: TextStyle(color: Colors.grey[600]),
+                                  style: TextStyle(color: Style.themeFade),
                                 ),
                               ],
                             ),
@@ -537,7 +539,7 @@ class _LoginPageState extends State<LoginPage> {
                             margin: const EdgeInsets.symmetric(horizontal: 25),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
-                                color: Colors.red),
+                                color: Colors.red.shade900),
                             child: Text(
                               errMsg,
                               style: const TextStyle(
@@ -552,11 +554,11 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       )
                     : (widget.loading && succMsg.isEmpty)
-                        ? const Column(children: [
+                        ? Column(children: [
                             CircularProgressIndicator(
-                              color: Colors.black,
+                              color: Style.themeLight,
                             ),
-                            SizedBox(height: 15),
+                            const SizedBox(height: 15),
                           ])
                         : (widget.loading && succMsg.isNotEmpty)
                             ? Column(
@@ -595,6 +597,8 @@ class _LoginPageState extends State<LoginPage> {
                             : () {
                                 signUserUp();
                               },
+                        backgroudColor: Style.themeLight,
+                        foregroudColor: Style.themeDark,
                       )
                     : const SizedBox(),
                 const SizedBox(height: 50),
@@ -606,7 +610,7 @@ class _LoginPageState extends State<LoginPage> {
                             (auth == AuthScreen.signUp)
                                 ? 'Already have account?'
                                 : 'Not a member?',
-                            style: TextStyle(color: Colors.grey[700]),
+                            style: TextStyle(color: Style.themeFade),
                           ),
                           const SizedBox(width: 4),
                           GestureDetector(
@@ -616,7 +620,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ? 'Register now'
                                   : 'Sign in',
                               style: const TextStyle(
-                                color: Colors.blue,
+                                color: Color.fromARGB(255, 82, 177, 255),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

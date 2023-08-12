@@ -48,20 +48,20 @@ class _MyRecordState extends State<MyRecord> {
 
     provider.checkConnection();
     return (!provider.connected)
-        ? const Center(
+        ? Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   CupertinoIcons.wifi_slash,
-                  color: Colors.grey,
+                  color: Style.themeFade,
                   size: 100,
                 ),
-                SizedBox(height: 25),
+                const SizedBox(height: 10),
                 Text(
                   'No internet connection!',
                   style: TextStyle(
-                      color: Colors.grey,
+                      color: Style.themeFade,
                       fontSize: 20,
                       fontWeight: FontWeight.bold),
                 )
@@ -142,16 +142,16 @@ class _MyRecordState extends State<MyRecord> {
                               SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * 0.2),
-                              const Icon(
+                              Icon(
                                 CupertinoIcons.doc_text_search,
-                                color: Colors.grey,
+                                color: Style.themeFade,
                                 size: 100,
                               ),
                               const SizedBox(height: 30),
-                              const Text(
+                              Text(
                                 'No record found',
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 25),
+                                style: TextStyle(
+                                    color: Style.themeFade, fontSize: 25),
                               ),
                             ],
                           )

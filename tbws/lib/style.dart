@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Style {
-  static Color themeUltraLight = const Color.fromARGB(255, 199, 241, 252);
-  static Color themeLight = const Color.fromARGB(255, 154, 206, 221);
-  static Color themeDark = const Color.fromARGB(255, 0, 0, 0);
-  static Color themeChat = const Color.fromARGB(255, 255, 250, 148);
+  static Color themeUltraLight = const Color.fromARGB(255, 180, 206, 213);
+  static Color themeLight = const Color.fromARGB(255, 97, 218, 251);
+  static Color themeDark = const Color.fromARGB(255, 36, 36, 36);
+  static Color themeFade = const Color.fromARGB(255, 83, 106, 113);
 }

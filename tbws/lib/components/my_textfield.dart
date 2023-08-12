@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:tbws/style.dart';
 
 import '../pages/login_page.dart';
 
@@ -92,21 +93,23 @@ class _MyTextFieldState extends State<MyTextField> {
                 }
               },
         controller: widget.controller,
+        cursorColor: Style.themeLight,
+        style: TextStyle(color: Style.themeLight),
         obscureText: widget.obscureText,
         maxLength: (widget.hideCheckMark) ? 50 : widget.maxLength,
         decoration: InputDecoration(
           counterText: '',
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Style.themeUltraLight),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade400),
+            borderSide: BorderSide(color: Style.themeUltraLight),
           ),
-          fillColor: Colors.grey.shade200,
+          fillColor: Colors.transparent,
           filled: true,
           hintText: widget.hintText,
-          hintStyle: TextStyle(color: Colors.grey[500]),
-          prefixIcon: Icon(widget.prefixIcon, color: Colors.grey[500]),
+          hintStyle: TextStyle(color: Style.themeFade),
+          prefixIcon: Icon(widget.prefixIcon, color: Style.themeFade),
           suffixIcon: (widget.hintText == 'Password' ||
                   widget.hintText == 'Confirm Password')
               ? SizedBox(
@@ -115,7 +118,7 @@ class _MyTextFieldState extends State<MyTextField> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Icon((widget.check) ? Icons.check : null,
-                          color: Colors.green),
+                          color: Style.themeUltraLight),
                       IconButton(
                         onPressed: () {
                           setState(() {
@@ -134,7 +137,7 @@ class _MyTextFieldState extends State<MyTextField> {
                                       widget.hintText == 'Confirm Password')
                                   ? CupertinoIcons.eye_fill
                                   : null),
-                          color: Colors.grey[500],
+                          color: Style.themeFade,
                         ),
                       ),
                     ],
@@ -142,7 +145,7 @@ class _MyTextFieldState extends State<MyTextField> {
                 )
               : Icon(
                   (widget.check && !widget.hideCheckMark) ? Icons.check : null,
-                  color: Colors.green),
+                  color: Style.themeUltraLight),
         ),
       ),
     );
