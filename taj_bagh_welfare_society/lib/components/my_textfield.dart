@@ -17,6 +17,7 @@ class MyTextField extends StatefulWidget {
   final FilteringTextInputFormatter filteringTextInputFormatter;
   bool check;
   bool hideCheckMark;
+  bool? rowButton;
 
   MyTextField(
       {super.key,
@@ -30,7 +31,8 @@ class MyTextField extends StatefulWidget {
       required this.filteringTextInputFormatter,
       required this.check,
       required this.prefixIcon,
-      required this.hideCheckMark});
+      required this.hideCheckMark,
+      this.rowButton});
 
   @override
   State<MyTextField> createState() => _MyTextFieldState();
@@ -49,7 +51,9 @@ class _MyTextFieldState extends State<MyTextField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      padding: (widget.rowButton != null)
+          ? const EdgeInsets.only(left: 25)
+          : const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
         keyboardType: widget.textInputType,
         inputFormatters: [widget.filteringTextInputFormatter],

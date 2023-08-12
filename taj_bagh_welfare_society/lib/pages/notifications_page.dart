@@ -68,7 +68,7 @@ class Notifications extends StatelessWidget {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              'My Records',
+                              'Notifications',
                               style: TextStyle(
                                   fontSize: 25,
                                   color: Colors.white,
@@ -95,19 +95,40 @@ class Notifications extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 15),
-                  Expanded(
-                    child: Consumer(
-                      builder: (BuildContext context, value, Widget? child) =>
-                          ListView(children: [
-                        ...provider.notifications.map((notification) {
-                          return NotificationCard(
-                              name: notification.sender,
-                              dateTime: notification.date,
-                              message: notification.message);
-                        }),
-                      ]),
-                    ),
-                  ),
+                  (provider.notifications.isEmpty)
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.2),
+                            Icon(
+                              CupertinoIcons.doc_text_search,
+                              color: Style.themeFade,
+                              size: 100,
+                            ),
+                            const SizedBox(height: 30),
+                            Text(
+                              'No notifications found',
+                              style: TextStyle(
+                                  color: Style.themeFade, fontSize: 25),
+                            ),
+                          ],
+                        )
+                      : Expanded(
+                          child: Consumer(
+                            builder:
+                                (BuildContext context, value, Widget? child) =>
+                                    ListView(children: [
+                              ...provider.notifications.map((notification) {
+                                return NotificationCard(
+                                    name: notification.sender,
+                                    dateTime: notification.date,
+                                    message: notification.message);
+                              }),
+                            ]),
+                          ),
+                        ),
                 ],
               );
   }

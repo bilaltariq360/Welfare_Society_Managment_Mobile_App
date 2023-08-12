@@ -14,97 +14,129 @@ class Functions extends StatelessWidget {
 
   static sendNotification(BuildContext context) async {
     TextEditingController controller = TextEditingController();
+    bool sendProgress = false;
+
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Style.themeLight,
-          title: const Text('Message'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                SizedBox(
-                  height: 350,
-                  width: 350,
-                  child: TextField(
-                    keyboardType: TextInputType.text,
-                    controller: controller,
-                    maxLength: 500,
-                    decoration: InputDecoration(
-                      counterText: '',
-                      enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            backgroundColor: Style.themeDark,
+            title: Text(
+              'Message',
+              style: TextStyle(color: Style.themeLight),
+            ),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  SizedBox(
+                    height: 350,
+                    width: 350,
+                    child: TextField(
+                      keyboardType: TextInputType.text,
+                      controller: controller,
+                      maxLength: 500,
+                      decoration: InputDecoration(
+                        counterText: '',
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Style.themeFade),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Style.themeFade),
+                        ),
+                        fillColor: Colors.transparent,
+                        filled: true,
+                        hintText: 'Write Message',
+                        hintStyle: TextStyle(color: Style.themeFade),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.shade400),
-                      ),
-                      fillColor: Colors.grey.shade200,
-                      filled: true,
-                      hintText: 'Write Message',
-                      hintStyle: TextStyle(color: Colors.grey[500]),
+                      style: TextStyle(color: Style.themeLight),
+                      maxLines: 20,
                     ),
-                    maxLines: 20,
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
-          ),
-          actions: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  child: Row(
-                    children: [
-                      Icon(Icons.close, color: Style.themeDark),
-                      const SizedBox(width: 3),
-                      Text('Cancel', style: TextStyle(color: Style.themeDark)),
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: Row(
-                    children: [
-                      Icon(Icons.send, color: Style.themeDark),
-                      const SizedBox(width: 3),
-                      Text('Send', style: TextStyle(color: Style.themeDark)),
-                    ],
-                  ),
-                  onPressed: () {
-                    if (Provider.of<UserProvider>(context, listen: false)
-                        .connected) {
-                      var url =
-                          'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/notifications.json';
-                      http
-                          .post(Uri.parse(url),
-                              body: json.encode({
-                                'Sender': Provider.of<UserProvider>(context,
-                                        listen: false)
-                                    .userDetails!
-                                    .userName,
-                                'Date': DateTime.now().toString(),
-                                'Message': controller.text,
-                              }))
-                          .then((value) {
+            actions: <Widget>[
+              Row(
+                mainAxisAlignment: (sendProgress)
+                    ? MainAxisAlignment.end
+                    : MainAxisAlignment.spaceBetween,
+                children: [
+                  if (sendProgress)
+                    Row(
+                      children: [
+                        CircularProgressIndicator(
+                          color: Style.themeLight,
+                        ),
+                        const SizedBox(width: 15),
+                        Text('Sending...',
+                            style: TextStyle(color: Style.themeLight)),
+                      ],
+                    )
+                  else if (!sendProgress)
+                    TextButton(
+                      child: Row(
+                        children: [
+                          Icon(Icons.close, color: Style.themeFade),
+                          const SizedBox(width: 3),
+                          Text('Cancel',
+                              style: TextStyle(color: Style.themeFade)),
+                        ],
+                      ),
+                      onPressed: () {
                         Navigator.of(context).pop();
-                        Provider.of<UserProvider>(context, listen: false)
-                            .clearNotifications();
-                        Provider.of<UserProvider>(context, listen: false)
-                            .loadNotifications();
-                      });
-                    } else {
-                      Navigator.of(context).pop();
-                    }
-                  },
-                ),
-              ],
-            ),
-          ],
-        );
+                      },
+                    ),
+                  if (!sendProgress)
+                    TextButton(
+                      child: Row(
+                        children: [
+                          Icon(Icons.send, color: Style.themeFade),
+                          const SizedBox(width: 3),
+                          Text('Send',
+                              style: TextStyle(color: Style.themeFade)),
+                        ],
+                      ),
+                      onPressed: () {
+                        if (controller.text.isEmpty) return;
+                        setState(() {
+                          sendProgress = true;
+                        });
+                        if (Provider.of<UserProvider>(context, listen: false)
+                            .connected) {
+                          var url =
+                              'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/notifications.json';
+                          http
+                              .post(Uri.parse(url),
+                                  body: json.encode({
+                                    'Sender': Provider.of<UserProvider>(context,
+                                            listen: false)
+                                        .userDetails!
+                                        .userName,
+                                    'Date': DateTime.now().toString(),
+                                    'Message': controller.text,
+                                  }))
+                              .then((value) {
+                            setState(() {
+                              sendProgress = true;
+                            });
+                            Navigator.of(context).pop();
+                            Provider.of<UserProvider>(context, listen: false)
+                                .clearNotifications();
+                            Provider.of<UserProvider>(context, listen: false)
+                                .loadNotifications();
+                          });
+                        } else {
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    ),
+                ],
+              ),
+            ],
+          );
+        });
       },
     );
   }
@@ -147,11 +179,14 @@ class Functions extends StatelessWidget {
               actions: <Widget>[
                 if (deletingInProgress)
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       CircularProgressIndicator(
                         color: Style.themeLight,
                       ),
-                      const Text('Deleting...'),
+                      const SizedBox(width: 15),
+                      Text('Deleting...',
+                          style: TextStyle(color: Style.themeLight)),
                     ],
                   )
                 else if (!deletingInProgress)

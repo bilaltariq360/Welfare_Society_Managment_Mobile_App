@@ -62,6 +62,10 @@ class UserProvider extends ChangeNotifier {
         'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/notifications.json';
 
     http.get(Uri.parse(url)).then((response) {
+      if (response.statusCode == 200) {
+        loading = false;
+        notifyListeners();
+      }
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       extractedData.forEach((fireBaseId, noti) {
         notifications.insert(
@@ -87,6 +91,10 @@ class UserProvider extends ChangeNotifier {
     var url =
         'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${userDetails!.userStreet}-${userDetails!.userHouseNo}.json';
     http.get(Uri.parse(url)).then((response) {
+      if (response.statusCode == 200) {
+        loading = false;
+        notifyListeners();
+      }
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       extractedData.forEach((fireBaseId, receipt) {
         receiptData.insert(
