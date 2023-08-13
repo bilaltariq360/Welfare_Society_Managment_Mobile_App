@@ -90,7 +90,7 @@ class UserProvider extends ChangeNotifier {
     loading = true;
     notifyListeners();
     var url =
-        'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${DateFormat.yMMM().format(DateTime.now())}/${userDetails!.userStreet}_${userDetails!.userHouseNo}.json';
+        'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${DateFormat.yMMM().format(DateTime.now()).replaceAll(' ', '')}/${userDetails!.userStreet}${userDetails!.userHouseNo.replaceAll(' ', '')}.json';
     http.get(Uri.parse(url)).then((response) {
       if (response.statusCode == 200) {
         loading = false;

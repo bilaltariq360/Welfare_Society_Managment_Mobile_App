@@ -24,6 +24,17 @@ class _DefaultMemberState extends State<DefaultMember> {
 
   TextEditingController userController = TextEditingController();
 
+  Future<bool> checkLinkExists(String url) async {
+    try {
+      final response = await http.get(Uri.parse(url));
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      extractedData.forEach((fireBaseId, receipt) {});
+      return (response.statusCode == 200);
+    } catch (e) {
+      return false;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -55,30 +66,24 @@ class _DefaultMemberState extends State<DefaultMember> {
           'House Area': userData['House Area'],
           'House Property': userData['House Property'],
           'House No': userData['House No'],
-          'Default Months': filterMonth,
+          'Default Months': [],
         });
       });
     }).then((value) async {
       for (var i = 0; i < members.length; i++) {
         for (var j = 0; j < filterMonth.length; j++) {
+          String month = filterMonth[j].replaceAll(' ', ''),
+              street = members[i]['Street'].replaceAll(' ', ''),
+              houseNo = members[i]['House No'].replaceAll(' ', '');
           var url =
-              'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${filterMonth[j]}/${members[i]['Street']}_${members[i]['House No']}.json';
-          try {
-            final response = await http.get(Uri.parse(url));
-            final extractedData =
-                json.decode(response.body) as Map<String, dynamic>;
-            extractedData.forEach((fireBaseId, receipt) {
-              print(receipt['Collector']);
-            });
-            print(response.statusCode);
-            if (response.statusCode == 200) {
-              print('Entered');
-              print(url);
-              members[i]['Default Months'].remove(filterMonth[j]);
-            }
-          } catch (e) {}
+              'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/$month/$street$houseNo.json';
+
+          bool link = await checkLinkExists(url);
+
+          if (!link) {
+            members[i]['Default Months'].add(filterMonth[j]);
+          }
         }
-        print(members[i]['Default Months']);
       }
     });
   }

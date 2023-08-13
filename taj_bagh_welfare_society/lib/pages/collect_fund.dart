@@ -280,7 +280,7 @@ class _CollectFundState extends State<CollectFund> {
                                             receiptNumber += 1;
                                           }).then((_) {
                                             url =
-                                                'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${DateFormat.yMMM().format(DateTime.now())}/${args[3]}_${args[6]}.json';
+                                                'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${DateFormat.yMMM().format(DateTime.now()).replaceAll(' ', '')}/${args[3]}${args[6].replaceAll(' ', '')}.json';
 
                                             http
                                                 .post(Uri.parse(url),
