@@ -265,19 +265,32 @@ class _CollectFundState extends State<CollectFund> {
                                             return;
                                           }
                                           int receiptNumber = -1;
+                                          String nonDefaultList = '';
+                                          DateTime dateTime = DateTime.now();
+
                                           setState(() {
                                             collectLoading = true;
                                           });
 
                                           var url =
-                                              'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/setting.json';
+                                              'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts.json';
                                           http
                                               .get(Uri.parse(url))
                                               .then((response) {
-                                            receiptNumber = int.parse(
+                                            receiptNumber = int.parse(json
+                                                    .decode(response.body)[
+                                                'setting']['Receipt Number']);
+                                            nonDefaultList =
                                                 json.decode(response.body)[
-                                                    'Receipt Number']);
+                                                        'paidMembers']
+                                                    ['Non Default List'];
                                             receiptNumber += 1;
+                                            nonDefaultList += '(' +
+                                                DateFormat.yMMM()
+                                                    .format(dateTime) +
+                                                args[3] +
+                                                args[6].replaceAll(' ', '') +
+                                                ')';
                                           }).then((_) {
                                             url =
                                                 'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${DateFormat.yMMM().format(DateTime.now()).replaceAll(' ', '')}/${args[3]}${args[6].replaceAll(' ', '')}.json';
@@ -285,8 +298,8 @@ class _CollectFundState extends State<CollectFund> {
                                             http
                                                 .post(Uri.parse(url),
                                                     body: json.encode({
-                                                      'Date': DateTime.now()
-                                                          .toString(),
+                                                      'Date':
+                                                          dateTime.toString(),
                                                       'Collector': provider
                                                           .userDetails!
                                                           .userName,
@@ -305,6 +318,15 @@ class _CollectFundState extends State<CollectFund> {
                                                     'Receipt Number':
                                                         receiptNumber
                                                             .toString(),
+                                                  }));
+                                            }).then((value) {
+                                              url =
+                                                  'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/paidMembers.json';
+
+                                              http.patch(Uri.parse(url),
+                                                  body: json.encode({
+                                                    'Non Default List':
+                                                        nonDefaultList,
                                                   }));
                                             }).then((value) {
                                               amountController.clear();
