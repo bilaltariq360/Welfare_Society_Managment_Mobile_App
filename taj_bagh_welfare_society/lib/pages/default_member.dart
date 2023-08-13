@@ -20,22 +20,24 @@ class DefaultMember extends StatefulWidget {
 }
 
 class _DefaultMemberState extends State<DefaultMember> {
-  List<String> filterMonth = ['All Records'];
-
   int membersFoundIndex = 0;
-  List<List<List<String>>> members = [];
 
   TextEditingController userController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+
+    List<String> filterMonth = [];
+
+    List<Map<String, dynamic>> members = [];
+
     DateTime currentDate = DateTime.now();
     DateTime startDate = DateTime(2023, 1); // Starting from August 2023
 
     while (startDate.isBefore(currentDate)) {
       String formattedDate = DateFormat.yMMM().format(startDate);
-      filterMonth.insert(1, formattedDate);
+      filterMonth.add(formattedDate);
       startDate = DateTime(startDate.year, startDate.month + 1);
     }
 
@@ -43,49 +45,40 @@ class _DefaultMemberState extends State<DefaultMember> {
         'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/user_registration.json';
 
     http.get(Uri.parse(url)).then((response) {
-      if (response.statusCode == 200) {}
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       extractedData.forEach((fireBaseId, userData) {
-        members.add([
-          userData['CNIC'],
-          userData['Full Name'],
-          userData['Mobile'],
-          userData['Street'],
-          userData['House Area'],
-          userData['House Property'],
-          userData['House No']
-        ]);
+        members.add({
+          'CNIC': userData['CNIC'],
+          'Full Name': userData['Full Name'],
+          'Mobile': userData['Mobile'],
+          'Street': userData['Street'],
+          'House Area': userData['House Area'],
+          'House Property': userData['House Property'],
+          'House No': userData['House No'],
+          'Default Months': filterMonth,
+        });
       });
-    }).then((response) {
+    }).then((value) async {
       for (var i = 0; i < members.length; i++) {
-        List<String> temp = [];
-        int code = 0;
-        url =
-            'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${members[i][3]}-${members[i][6]}.json';
-
-        http.get(Uri.parse(url)).then((response) {
-          if (response.statusCode == 200) {
-            code = response.statusCode;
-            temp = filterMonth;
-          } else {
+        for (var j = 0; j < filterMonth.length; j++) {
+          var url =
+              'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${filterMonth[j]}/${members[i]['Street']}_${members[i]['House No']}.json';
+          try {
+            final response = await http.get(Uri.parse(url));
             final extractedData =
                 json.decode(response.body) as Map<String, dynamic>;
-            extractedData.forEach((fireBaseId, userData) {
-              temp.add(
-                  DateFormat.yMMM().format(DateTime.parse(userData['Date'])));
+            extractedData.forEach((fireBaseId, receipt) {
+              print(receipt['Collector']);
             });
-          }
-        }).then((value) {
-          if (code == 200) {
-            members[i].add(temp);
-            code = 0;
-          } else {
-            for (var month in filterMonth) {
-              temp.removeWhere((m) => m == month);
+            print(response.statusCode);
+            if (response.statusCode == 200) {
+              print('Entered');
+              print(url);
+              members[i]['Default Months'].remove(filterMonth[j]);
             }
-            members[i].add(temp);
-          }
-        });
+          } catch (e) {}
+        }
+        print(members[i]['Default Months']);
       }
     });
   }
@@ -173,7 +166,7 @@ class _DefaultMemberState extends State<DefaultMember> {
                     const SizedBox(height: 25),
                     MyDropdown(
                         hintText: 'All Records',
-                        list: filterMonth,
+                        list: [],
                         prefixIcon: CupertinoIcons.calendar_today),
                     const SizedBox(height: 25),
                     Row(
@@ -226,7 +219,7 @@ class _DefaultMemberState extends State<DefaultMember> {
                               fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 10),
-                        ...members[0].map((member) {
+                        /*...members[0].map((member) {
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 30, vertical: 20),
@@ -359,7 +352,7 @@ class _DefaultMemberState extends State<DefaultMember> {
                               ),
                             ),
                           );
-                        }),
+                        }),*/
                       ],
                     )
                   ],

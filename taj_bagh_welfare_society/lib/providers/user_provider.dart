@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 import '../models/user.dart';
 
@@ -89,7 +90,7 @@ class UserProvider extends ChangeNotifier {
     loading = true;
     notifyListeners();
     var url =
-        'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${userDetails!.userStreet}-${userDetails!.userHouseNo}.json';
+        'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${DateFormat.yMMM().format(DateTime.now())}/${userDetails!.userStreet}_${userDetails!.userHouseNo}.json';
     http.get(Uri.parse(url)).then((response) {
       if (response.statusCode == 200) {
         loading = false;

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:taj_bagh_welfare_society/components/my_button.dart';
 import 'package:taj_bagh_welfare_society/providers/user_provider.dart';
@@ -279,7 +280,8 @@ class _CollectFundState extends State<CollectFund> {
                                             receiptNumber += 1;
                                           }).then((_) {
                                             url =
-                                                'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${args[3]}-${args[6]}.json';
+                                                'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${DateFormat.yMMM().format(DateTime.now())}/${args[3]}_${args[6]}.json';
+
                                             http
                                                 .post(Uri.parse(url),
                                                     body: json.encode({
