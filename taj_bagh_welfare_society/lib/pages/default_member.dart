@@ -75,7 +75,7 @@ class _DefaultMemberState extends State<DefaultMember> {
             json.decode(response.body)['Non Default List'];
         for (var i = 0; i < members.length; i++) {
           bool memberFound = false;
-          for (var j = 1; j < filterMonth.length; j++) {
+          for (var j = 0; j < filterMonth.length; j++) {
             if (!nonDefaultMembers.contains(
                 '(${filterMonth[j]}${members[i]['Street']}${members[i]['House No'].replaceAll(' ', '')})')) {
               members[i]['Default Months'].add(filterMonth[j]);
@@ -210,11 +210,26 @@ class _DefaultMemberState extends State<DefaultMember> {
                               const SizedBox(height: 10),
                               ...members.map((member) {
                                 return (member['Default Months']
-                                            .contains(MyRecord.receiptMonth) ||
-                                        member['Full Name']
-                                            .toLowerCase()
-                                            .contains(userController.text
-                                                .toLowerCase()))
+                                            .contains(MyRecord.receiptMonth) &&
+                                        ((userController.text.isEmpty)
+                                            ? true
+                                            : (member['Full Name']
+                                                    .toLowerCase()
+                                                    .contains(userController
+                                                        .text
+                                                        .toLowerCase()) ||
+                                                member['CNIC']
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        userController.text) ||
+                                                member['Mobile']
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        userController.text) ||
+                                                member['Street']
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        userController.text))))
                                     ? Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 30, vertical: 20),
