@@ -65,6 +65,32 @@ class _SearchMemberState extends State<SearchMember> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(height: 25),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      child: Row(
+                        children: [
+                          SizedBox(width: 15),
+                          Icon(
+                            Icons.search,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            'Search Member',
+                            style: TextStyle(
+                                fontSize: 25,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 Column(
                   children: [
                     const SizedBox(height: 100),

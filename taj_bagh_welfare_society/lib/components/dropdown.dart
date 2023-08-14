@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:taj_bagh_welfare_society/pages/complain_submit.dart';
 import 'package:taj_bagh_welfare_society/pages/my_records_page.dart';
 import 'package:taj_bagh_welfare_society/style.dart';
 
@@ -79,6 +80,10 @@ class _MyDropdownState extends State<MyDropdown> {
               } else if (widget.hintText == 'All Records') {
                 setState(() {
                   MyRecord.receiptMonth = val;
+                });
+              } else if (widget.hintText == 'Select Department') {
+                setState(() {
+                  ComplainSubmit.complaintDept = val;
                 });
               }
             },

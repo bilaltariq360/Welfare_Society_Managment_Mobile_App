@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:taj_bagh_welfare_society/pages/complaints_page.dart';
 import 'package:taj_bagh_welfare_society/pages/search_member.dart';
 import 'package:taj_bagh_welfare_society/pages/my_records_page.dart';
 import 'package:taj_bagh_welfare_society/pages/notifications_page.dart';
@@ -10,6 +11,7 @@ import 'package:taj_bagh_welfare_society/pages/default_member.dart';
 import '../components/functions.dart';
 import '../providers/user_provider.dart';
 import '../style.dart';
+import 'complain_submit.dart';
 
 class Home extends StatefulWidget {
   static String routeName = '/home';
@@ -23,6 +25,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   bool initialNotificationLoad = false;
   bool initialReceiptsLoad = false;
+  bool initialComplaintsLoad = false;
 
   int pageIndex = 0;
 
@@ -30,6 +33,8 @@ class _HomeState extends State<Home> {
     MyRecord(),
     const Notifications(),
     SearchMember(),
+    ComplainSubmit(),
+    const Complaints(),
     DefaultMember(),
     Profile(),
   ];
@@ -37,17 +42,21 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<UserProvider>(context);
-    if (!initialNotificationLoad) {
-      Provider.of<UserProvider>(context, listen: false).clearNotifications();
-      Provider.of<UserProvider>(context, listen: false).loadNotifications();
-      initialNotificationLoad = true;
-    }
     if (!initialReceiptsLoad) {
       Provider.of<UserProvider>(context, listen: false).clearReceipts();
       Provider.of<UserProvider>(context, listen: false).loadReceipts();
       initialReceiptsLoad = true;
     }
-
+    if (!initialNotificationLoad) {
+      Provider.of<UserProvider>(context, listen: false).clearNotifications();
+      Provider.of<UserProvider>(context, listen: false).loadNotifications();
+      initialNotificationLoad = true;
+    }
+    if (!initialComplaintsLoad) {
+      Provider.of<UserProvider>(context, listen: false).clearComplaints();
+      Provider.of<UserProvider>(context, listen: false).loadComplaints();
+      initialComplaintsLoad = true;
+    }
     return SafeArea(
       child: Scaffold(
         floatingActionButton: (provider.connected &&
@@ -95,6 +104,15 @@ class _HomeState extends State<Home> {
                   const GButton(
                     icon: Icons.confirmation_num_outlined,
                     text: 'Collect Fund',
+                  ),
+                const GButton(
+                  icon: Icons.edit_document,
+                  text: 'Write Complaint',
+                ),
+                if (provider.userDetails!.isAdmin)
+                  const GButton(
+                    icon: Icons.comment_sharp,
+                    text: 'Complaint',
                   ),
                 if (provider.userDetails!.isAdmin)
                   const GButton(

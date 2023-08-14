@@ -31,7 +31,7 @@ class NotificationCard extends StatelessWidget {
                       .userDetails!
                       .userCNIC !=
                   '3520198927537') return;
-          Functions.showAlertBox(context, dateTime);
+          Functions.showNotiDeleteAlertBox(context, dateTime);
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),

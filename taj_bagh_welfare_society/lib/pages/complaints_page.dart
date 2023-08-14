@@ -2,12 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../components/complaint_card.dart';
 import '../components/notification_card.dart';
 import '../providers/user_provider.dart';
 import '../style.dart';
 
-class Notifications extends StatelessWidget {
-  const Notifications({super.key});
+class Complaints extends StatelessWidget {
+  const Complaints({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class Notifications extends StatelessWidget {
               ],
             ),
           )
-        : (provider.notiLoading)
+        : (provider.complLoading)
             ? Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -62,13 +63,13 @@ class Notifications extends StatelessWidget {
                           children: [
                             SizedBox(width: 15),
                             Icon(
-                              Icons.notifications_active_outlined,
+                              Icons.comment_sharp,
                               color: Colors.white,
                               size: 30,
                             ),
                             SizedBox(width: 10),
                             Text(
-                              'Notifications',
+                              'Complaints',
                               style: TextStyle(
                                   fontSize: 25,
                                   color: Colors.white,
@@ -82,8 +83,8 @@ class Notifications extends StatelessWidget {
                           children: [
                             IconButton(
                               onPressed: () {
-                                provider.clearNotifications();
-                                provider.loadNotifications();
+                                provider.clearComplaints();
+                                provider.loadComplaints();
                               },
                               icon: const Icon(CupertinoIcons.refresh),
                               color: Colors.white,
@@ -95,7 +96,7 @@ class Notifications extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 15),
-                  (provider.notifications.isEmpty)
+                  (provider.complaints.isEmpty)
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -109,7 +110,7 @@ class Notifications extends StatelessWidget {
                             ),
                             const SizedBox(height: 30),
                             Text(
-                              'No notifications found',
+                              'No complaints found',
                               style: TextStyle(
                                   color: Style.themeFade, fontSize: 25),
                             ),
@@ -120,11 +121,19 @@ class Notifications extends StatelessWidget {
                             builder:
                                 (BuildContext context, value, Widget? child) =>
                                     ListView(children: [
-                              ...provider.notifications.map((notification) {
-                                return NotificationCard(
-                                    name: notification.sender,
-                                    dateTime: notification.date,
-                                    message: notification.message);
+                              ...provider.complaints.map((complaint) {
+                                return ComplaintCard(
+                                  name: complaint.name,
+                                  dateTime: complaint.dateTime,
+                                  complaint: complaint.complaint,
+                                  cnic: complaint.cnic,
+                                  dept: complaint.dept,
+                                  houseArea: complaint.houseArea,
+                                  houseNo: complaint.houseNo,
+                                  houseProperty: complaint.houseProperty,
+                                  mobile: complaint.mobile,
+                                  street: '${complaint.street} street',
+                                );
                               }),
                             ]),
                           ),

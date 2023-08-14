@@ -7,6 +7,31 @@ import 'package:intl/intl.dart';
 
 import '../models/user.dart';
 
+class Compl {
+  final String name;
+  final DateTime dateTime;
+  final String complaint;
+  final String cnic;
+  final String dept;
+  final String houseArea;
+  final String houseNo;
+  final String houseProperty;
+  final String mobile;
+  final String street;
+
+  Compl(
+      {required this.name,
+      required this.dateTime,
+      required this.complaint,
+      required this.cnic,
+      required this.dept,
+      required this.houseArea,
+      required this.houseNo,
+      required this.houseProperty,
+      required this.mobile,
+      required this.street});
+}
+
 class Noti {
   final DateTime date;
   final String sender;
@@ -32,7 +57,10 @@ class UserProvider extends ChangeNotifier {
   User? userDetails;
   List<Noti> notifications = [];
   List<ReceiptData> receiptData = [];
-  bool loading = false;
+  List<Compl> complaints = [];
+  bool notiLoading = false;
+  bool receiptLoading = false;
+  bool complLoading = false;
 
   void setUserDetail(
       String userCNIC,
@@ -57,14 +85,14 @@ class UserProvider extends ChangeNotifier {
   }
 
   void loadNotifications() {
-    loading = true;
+    notiLoading = true;
     notifyListeners();
     var url =
         'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/notifications.json';
 
     http.get(Uri.parse(url)).then((response) {
       if (response.statusCode == 200) {
-        loading = false;
+        notiLoading = false;
         notifyListeners();
       }
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -76,7 +104,7 @@ class UserProvider extends ChangeNotifier {
                 date: DateTime.parse(noti['Date']),
                 message: noti['Message']));
       });
-      loading = false;
+      notiLoading = false;
       notifyListeners();
     });
   }
@@ -87,13 +115,13 @@ class UserProvider extends ChangeNotifier {
 
   Future<void> loadReceipts() async {
     String receiptNumber = '-1';
-    loading = true;
+    receiptLoading = true;
     notifyListeners();
     var url =
         'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/receipts/${DateFormat.yMMM().format(DateTime.now()).replaceAll(' ', '')}/${userDetails!.userStreet}${userDetails!.userHouseNo.replaceAll(' ', '')}.json';
     http.get(Uri.parse(url)).then((response) {
       if (response.statusCode == 200) {
-        loading = false;
+        receiptLoading = false;
         notifyListeners();
       }
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -106,7 +134,7 @@ class UserProvider extends ChangeNotifier {
                 amount: receipt['Amount'],
                 date: DateTime.parse(receipt['Date'])));
       });
-      loading = false;
+      receiptLoading = false;
       notifyListeners();
     });
   }
@@ -127,5 +155,41 @@ class UserProvider extends ChangeNotifier {
       connected = true;
     }
     notifyListeners();
+  }
+
+  void loadComplaints() {
+    complLoading = true;
+    notifyListeners();
+    var url =
+        'https://tbws-app-fba9e-default-rtdb.asia-southeast1.firebasedatabase.app/complaints.json';
+
+    http.get(Uri.parse(url)).then((response) {
+      if (response.statusCode == 200) {
+        complLoading = false;
+        notifyListeners();
+      }
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      extractedData.forEach((fireBaseId, compl) {
+        complaints.insert(
+            0,
+            Compl(
+                name: compl['Full Name'],
+                dateTime: DateTime.parse(compl['Date']),
+                complaint: compl['Complaint'],
+                cnic: compl['CNIC'],
+                dept: compl['Complaint Department'],
+                houseArea: compl['House Area'],
+                houseNo: compl['House No'],
+                houseProperty: compl['House Property'],
+                mobile: compl['Mobile'],
+                street: compl['Street']));
+      });
+      complLoading = false;
+      notifyListeners();
+    });
+  }
+
+  void clearComplaints() {
+    complaints.clear();
   }
 }

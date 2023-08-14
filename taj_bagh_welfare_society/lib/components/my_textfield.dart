@@ -18,6 +18,7 @@ class MyTextField extends StatefulWidget {
   bool check;
   bool hideCheckMark;
   bool? rowButton;
+  int? multiline;
 
   MyTextField(
       {super.key,
@@ -32,7 +33,8 @@ class MyTextField extends StatefulWidget {
       required this.check,
       required this.prefixIcon,
       required this.hideCheckMark,
-      this.rowButton});
+      this.rowButton,
+      this.multiline});
 
   @override
   State<MyTextField> createState() => _MyTextFieldState();
@@ -55,6 +57,7 @@ class _MyTextFieldState extends State<MyTextField> {
           ? const EdgeInsets.only(left: 25)
           : const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
+        maxLines: (widget.multiline != null) ? widget.multiline : 1,
         keyboardType: widget.textInputType,
         inputFormatters: [widget.filteringTextInputFormatter],
         onChanged: (widget.hideCheckMark)

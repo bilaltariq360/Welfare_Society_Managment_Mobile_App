@@ -67,7 +67,7 @@ class _MyRecordState extends State<MyRecord> {
               ],
             ),
           )
-        : (provider.loading)
+        : (provider.receiptLoading)
             ? Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
