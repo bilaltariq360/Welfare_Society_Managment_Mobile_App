@@ -344,11 +344,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
-                Icon(
-                  Icons.lock,
-                  size: 100,
-                  color: Style.themeLight,
-                ),
+                Image.asset('lib/images/logo.png', width: 200),
                 const SizedBox(height: 50),
                 Text(
                   (auth == AuthScreen.signIn)

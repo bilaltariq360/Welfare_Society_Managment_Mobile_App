@@ -38,7 +38,9 @@ class Profile extends StatelessWidget {
         : SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(height: 80),
+                const SizedBox(height: 30),
+                Image.asset('lib/images/logo.png', width: 100),
+                const SizedBox(height: 30),
                 Stack(
                   alignment: Alignment.topCenter,
                   children: [
@@ -131,7 +133,7 @@ class Profile extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 100),
+                const SizedBox(height: 80),
                 MyButton(
                     btnText: 'Logout',
                     backgroudColor: Style.themeLight,
